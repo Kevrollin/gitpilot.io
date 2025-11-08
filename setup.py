@@ -19,12 +19,19 @@ setup(
     name="auto-commit-assistant",
     version=version,
     author="Gitpilot",
+    author_email="your-email@example.com",  # Update with your email
     description="Automatically stage, analyze, commit, and push Git changes using AI",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    url="https://github.com/Kevrollin/gitpilot.io",
+    project_urls={
+        "Bug Reports": "https://github.com/Kevrollin/gitpilot.io/issues",
+        "Source": "https://github.com/Kevrollin/gitpilot.io",
+        "Documentation": "https://github.com/Kevrollin/gitpilot.io#readme",
+    },
     packages=find_packages(),
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
@@ -33,6 +40,9 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: Software Development :: Version Control :: Git",
+        "Topic :: Utilities",
     ],
     python_requires=">=3.8",
     install_requires=requirements,
@@ -42,5 +52,6 @@ setup(
             "autocommit=cli:main",
         ],
     },
+    keywords="git, commit, ai, automation, cli, developer-tools",
 )
 

@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers on tags like v0.1.0, v1.2.3, etc.
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Extract version from tag
+      id: get_version
+      run: |
+        if [ "${{ github.ref_type }}" == "tag" ]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        else
+          VERSION=$(python3 -c "from auto_commit import __version__; print(__version__)")
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+    
+    - name: Install build dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install build wheel twine
+    
+    - name: Build package
+      run: |
+        python3 -m build
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/*.whl
+          dist/*.tar.gz
+        name: Release v${{ steps.get_version.outputs.version }}
+        body: |
+          ## Gitpilot v${{ steps.get_version.outputs.version }}
+          
+          ### Installation
+          
+          **Using pipx (Recommended):**
+          ```bash
+          pipx install git+https://github.com/Kevrollin/gitpilot.io.git@v${{ steps.get_version.outputs.version }}
+          ```
+          
+          **Using pip:**
+          ```bash
+          pip install --user git+https://github.com/Kevrollin/gitpilot.io.git@v${{ steps.get_version.outputs.version }}
+          ```
+          
+          **Using the install script:**
+          ```bash
+          curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/v${{ steps.get_version.outputs.version }}/install.sh | bash
+          ```
+          
+          ### What's Changed
+          
+          See [CHANGELOG.md](https://github.com/Kevrollin/gitpilot.io/blob/main/CHANGELOG.md) for details.
+          
+          ### Installation Files
+          
+          - Source distribution (`.tar.gz`)
+          - Wheel distribution (`.whl`)
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
