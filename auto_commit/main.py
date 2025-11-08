@@ -96,7 +96,7 @@ class AutoCommitWorkflow:
             diff_text = self._get_diff()
             if not diff_text or diff_text.strip() == "":
                 if not self.quiet:
-                    show_success("No changes to commit")
+                    show_info("No changes to commit")
                 return 0
             
             # Generate commit message
@@ -141,17 +141,17 @@ class AutoCommitWorkflow:
     def _setup_repo(self) -> tuple[bool, str]:
         """Setup git repository if needed."""
         if not self.quiet:
-            show_step(0, 6, "Checking git repository", "running")
+            show_step("Checking git repository", "running")
         
         if is_git_repo():
             if not self.quiet:
-                show_step(0, 6, "Git repository found", "success")
+                show_step("Git repository found", "success")
             self._add_step("Git Repo Check", "success", "Repository exists")
             return False, ""
         
         # No repo found - prompt for URL
         if not self.quiet:
-            show_step(0, 6, "Git repository not found", "pending")
+            show_step("Git repository not found", "pending")
             show_warning("No git repository found in the current directory")
             show_info("Please provide a git repository URL to associate with this folder")
             show_info("(You can also press Enter to skip and initialize without a remote)")
@@ -174,12 +174,12 @@ class AutoCommitWorkflow:
         
         if success:
             if not self.quiet:
-                show_step(0, 6, "Git repository initialized", "success")
+                show_step("Git repository initialized", "success")
             self._add_step("Git Repo Setup", "success", msg)
             return True, remote_url if remote_url else ""
         else:
             if not self.quiet:
-                show_step(0, 6, "Git repository setup failed", "error")
+                show_step("Git repository setup failed", "error")
             self._add_step("Git Repo Setup", "error", msg)
             raise Exception(msg)
     
@@ -212,7 +212,7 @@ class AutoCommitWorkflow:
     def _stage_changes(self) -> bool:
         """Stage all changes."""
         if not self.quiet:
-            show_step(1, 6, "Staging changes", "running")
+            show_step("Staging changes", "running")
         
         if self.dry_run:
             if not self.quiet:
@@ -228,19 +228,19 @@ class AutoCommitWorkflow:
         
         if success:
             if not self.quiet:
-                show_step(1, 6, "Changes staged", "success")
+                show_step("Changes staged", "success")
             self._add_step("Stage Changes", "success", "All changes staged")
             return True
         else:
             if not self.quiet:
-                show_step(1, 6, "Staging failed", "error")
+                show_step("Staging failed", "error")
             self._add_step("Stage Changes", "error", "Failed to stage changes")
             return False
     
     def _get_diff(self) -> str:
         """Get diff of staged changes."""
         if not self.quiet:
-            show_step(2, 6, "Analyzing changes", "running")
+            show_step("Analyzing changes", "running")
         
         if not self.quiet:
             with show_spinner("Analyzing git diff"):
@@ -249,7 +249,7 @@ class AutoCommitWorkflow:
             diff_text = get_diff()
         
         if not self.quiet:
-            show_step(2, 6, "Changes analyzed", "success")
+            show_step("Changes analyzed", "success")
         
         self._add_step("Analyze Changes", "success", f"Diff length: {len(diff_text)} chars")
         return diff_text
@@ -257,7 +257,7 @@ class AutoCommitWorkflow:
     def _generate_commit_message(self, diff_text: str) -> Optional[str]:
         """Generate commit message using AI or prompt user."""
         if not self.quiet:
-            show_step(3, 6, "Generating commit message", "running")
+            show_step("Generating commit message", "running")
         
         if self.skip_ai:
             # Skip AI, prompt for manual message
@@ -272,28 +272,23 @@ class AutoCommitWorkflow:
                 return commit_message.strip()
             return None
         
-        # Generate with AI
-        def progress_callback(msg: str):
-            if not self.quiet:
-                show_info(msg)
-        
+        # Generate with AI (silently in background, no callback)
         try:
             if not self.quiet:
                 with show_spinner("Generating commit message with AI"):
-                    commit_message = generate_commit_message(diff_text, progress_callback)
+                    commit_message = generate_commit_message(diff_text, None)
             else:
-                # In quiet mode, use None callback
                 commit_message = generate_commit_message(diff_text, None)
             
             if not self.quiet:
-                show_step(3, 6, "Commit message generated", "success")
+                show_step("Commit message generated", "success")
             
             self._add_step("Generate Message", "success", f"AI generated: {commit_message[:50]}")
             return commit_message
             
         except Exception as e:
             if not self.quiet:
-                show_step(3, 6, "AI generation failed", "error")
+                show_step("AI generation failed", "error")
                 show_error(f"Failed to generate commit message: {str(e)}")
             self._add_step("Generate Message", "error", str(e))
             
@@ -325,14 +320,14 @@ class AutoCommitWorkflow:
         final_message = show_commit_preview(commit_message, diff_summary)
         
         if not self.quiet:
-            show_step(4, 6, "Commit message confirmed", "success")
+            show_step("Commit message confirmed", "success")
         
         return final_message
     
     def _commit_changes(self, message: str) -> bool:
         """Commit staged changes."""
         if not self.quiet:
-            show_step(5, 6, "Committing changes", "running")
+            show_step("Committing changes", "running")
         
         if self.dry_run:
             if not self.quiet:
@@ -348,19 +343,19 @@ class AutoCommitWorkflow:
         
         if success:
             if not self.quiet:
-                show_step(5, 6, "Changes committed", "success")
+                show_step("Changes committed", "success")
             self._add_step("Commit", "success", message)
             return True
         else:
             if not self.quiet:
-                show_step(5, 6, "Commit failed", "error")
+                show_step("Commit failed", "error")
             self._add_step("Commit", "error", "Failed to commit")
             return False
     
     def _push_changes(self) -> bool:
         """Push commits to remote."""
         if not self.quiet:
-            show_step(6, 6, "Pushing to remote", "running")
+            show_step("Pushing to remote", "running")
         
         current_branch = get_current_branch()
         if not self.quiet:
@@ -371,12 +366,12 @@ class AutoCommitWorkflow:
         
         if success:
             if not self.quiet:
-                show_step(6, 6, "Changes pushed", "success")
+                show_step("Changes pushed", "success")
             self._add_step("Push", "success", msg)
             return True
         else:
             if not self.quiet:
-                show_step(6, 6, "Push failed or skipped", "skipped")
+                show_step("Push failed or skipped", "skipped")
                 show_warning(msg)
             self._add_step("Push", "skipped", msg)
             return False

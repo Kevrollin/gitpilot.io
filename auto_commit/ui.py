@@ -1,22 +1,22 @@
-"""Rich-based interactive terminal UI for auto-commit assistant."""
+"""Minimal terminal-style UI for auto-commit assistant."""
 
 import sys
+import os
+import subprocess
 from datetime import datetime
 from typing import Optional, Literal
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Confirm, Prompt
 from rich.table import Table
 from rich.text import Text
 from rich import box
-import subprocess
-import os
 
 # Initialize console
 console = Console()
 
-# Theme colors
+# Minimal theme colors
 THEMES = {
     "hacker": {
         "primary": "bright_green",
@@ -28,9 +28,9 @@ THEMES = {
         "info": "cyan",
     },
     "minimal": {
-        "primary": "blue",
-        "secondary": "white",
-        "accent": "bright_blue",
+        "primary": "white",
+        "secondary": "bright_white",
+        "accent": "blue",
         "error": "red",
         "success": "green",
         "warning": "yellow",
@@ -47,17 +47,17 @@ THEMES = {
     },
 }
 
-# Current theme (default: hacker)
-_current_theme = "hacker"
+# Current theme (default: minimal)
+_current_theme = "minimal"
 
 
-def set_theme(theme: Literal["hacker", "minimal", "developer"] = "hacker") -> None:
+def set_theme(theme: Literal["hacker", "minimal", "developer"] = "minimal") -> None:
     """Set the UI theme."""
     global _current_theme
     if theme in THEMES:
         _current_theme = theme
     else:
-        _current_theme = "hacker"
+        _current_theme = "minimal"
 
 
 def get_color(color_type: str) -> str:
@@ -66,46 +66,50 @@ def get_color(color_type: str) -> str:
 
 
 def show_banner() -> None:
-    """Display hacker/dev-inspired ASCII banner."""
+    """Display minimal terminal banner."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    banner_text = Text()
-    banner_text.append("╔═══════════════════════════════════════════════════════╗\n", style=get_color("primary"))
-    banner_text.append("║                                                       ║\n", style=get_color("primary"))
-    banner_text.append("║", style=get_color("primary"))
-    banner_text.append("          GITPILOT - AUTO COMMIT ASSISTANT", style=f"bold {get_color('accent')}")
-    banner_text.append("          ║\n", style=get_color("primary"))
-    banner_text.append("║", style=get_color("primary"))
-    banner_text.append("              AI-Powered Git Automation", style=get_color("secondary"))
-    banner_text.append("              ║\n", style=get_color("primary"))
-    banner_text.append("║                                                       ║\n", style=get_color("primary"))
-    banner_text.append("╚═══════════════════════════════════════════════════════╝\n", style=get_color("primary"))
-    banner_text.append(f"  🚀 Initialized at {timestamp}\n", style=get_color("info"))
+    console.print(f"[{get_color('primary')}]╔═══════════════════════════════════════════════════════╗[/{get_color('primary')}]")
+    console.print(f"[{get_color('primary')}]║[/{get_color('primary')}]  [{get_color('accent')}]GITPILOT - AUTO COMMIT ASSISTANT[/{get_color('accent')}]                    [{get_color('primary')}]║[/{get_color('primary')}]")
+    console.print(f"[{get_color('primary')}]║[/{get_color('primary')}]  [{get_color('secondary')}]AI-Powered Git Automation[/{get_color('secondary')}]                          [{get_color('primary')}]║[/{get_color('primary')}]")
+    console.print(f"[{get_color('primary')}]╚═══════════════════════════════════════════════════════╝[/{get_color('primary')}]")
+    console.print(f"[{get_color('info')}]Initialized: {timestamp}[/{get_color('info')}]\n")
+
+
+def show_step(step_name: str, status: str = "running", details: str = "") -> None:
+    """
+    Display a process step in terminal style.
     
-    console.print(banner_text)
-
-
-def show_step(step_number: int, total_steps: int, step_name: str, status: str = "pending") -> None:
-    """Display a step in the workflow."""
-    status_icons = {
-        "pending": "⏳",
-        "running": "⚙️",
-        "success": "✅",
-        "error": "❌",
-        "skipped": "⏭️",
+    Status formats:
+    - running: [*] Process name
+    - success: [OK] Process name
+    - error: [FAIL] Process name
+    - skipped: [SKIP] Process name
+    """
+    status_markers = {
+        "running": "[*]",
+        "success": "[OK]",
+        "error": "[FAIL]",
+        "skipped": "[SKIP]",
+        "pending": "[...]",
     }
     
-    icon = status_icons.get(status, "⏳")
-    color = {
-        "pending": get_color("info"),
-        "running": get_color("accent"),
+    marker = status_markers.get(status, "[*]")
+    
+    color_map = {
+        "running": get_color("info"),
         "success": get_color("success"),
         "error": get_color("error"),
         "skipped": get_color("warning"),
-    }.get(status, get_color("info"))
+        "pending": get_color("info"),
+    }
     
-    step_text = f"[{step_number}/{total_steps}] {icon} {step_name}"
-    console.print(f"  {step_text}", style=color)
+    color = color_map.get(status, get_color("info"))
+    
+    if details:
+        console.print(f"  {marker} [{color}]{step_name}[/{color}] - {details}")
+    else:
+        console.print(f"  {marker} [{color}]{step_name}[/{color}]")
 
 
 def show_spinner(message: str):
@@ -124,7 +128,7 @@ def show_spinner(message: str):
         
         def __enter__(self):
             self.progress = Progress(
-                SpinnerColumn(spinner_name="dots", style=get_color("accent")),
+                SpinnerColumn(spinner_name="dots", style=get_color("info")),
                 TextColumn(f"[{get_color('info')}]{self.msg}[/{get_color('info')}]"),
                 console=console,
                 transient=True,
@@ -140,18 +144,8 @@ def show_spinner(message: str):
     return SpinnerContext(message)
 
 
-def show_progress_bar(message: str, total: int = 100):
-    """Create a progress bar context manager."""
-    return Progress(
-        TextColumn(f"[{get_color('info')}]{message}[/{get_color('info')}]"),
-        BarColumn(bar_width=None),
-        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-        console=console,
-    )
-
-
 def show_panel(content: str, title: str = "", border_style: Optional[str] = None) -> None:
-    """Display content in a Rich panel."""
+    """Display content in a minimal panel."""
     if not border_style:
         border_style = get_color("primary")
     
@@ -159,7 +153,7 @@ def show_panel(content: str, title: str = "", border_style: Optional[str] = None
         content,
         title=title,
         border_style=border_style,
-        box=box.ROUNDED,
+        box=box.SIMPLE,
         padding=(1, 2),
     )
     console.print(panel)
@@ -179,7 +173,7 @@ def show_commit_preview(commit_message: str, diff_summary: str = "") -> str:
     
     show_panel(
         preview_content,
-        title="[bold]🤖 AI-Generated Commit Message[/bold]",
+        title="[bold]AI-Generated Commit Message[/bold]",
         border_style=get_color("accent"),
     )
     
@@ -193,23 +187,20 @@ def show_commit_preview(commit_message: str, diff_summary: str = "") -> str:
     
     while True:
         choice = Prompt.ask(
-            f"\n[{get_color('primary')}]Your choice[/{get_color('primary')}]",
+            f"\n[{get_color('primary')}]Choice[/{get_color('primary')}]",
             choices=["1", "2", "3", "4", "5"],
             default="1",
         )
         
         if choice == "1":
-            # Accept and continue
             return commit_message
         elif choice == "2":
-            # Edit message inline
             edited = Prompt.ask(
                 f"[{get_color('accent')}]Edit commit message[/{get_color('accent')}]",
                 default=commit_message,
             )
             return edited.strip()
         elif choice == "3":
-            # Edit in editor
             try:
                 edited = edit_with_editor(commit_message)
                 return edited.strip() if edited else commit_message
@@ -222,13 +213,11 @@ def show_commit_preview(commit_message: str, diff_summary: str = "") -> str:
                 )
                 return edited.strip()
         elif choice == "4":
-            # Manual message
             manual = Prompt.ask(
                 f"[{get_color('warning')}]Enter commit message[/{get_color('warning')}]",
             )
             return manual.strip()
         else:
-            # Cancel
             console.print(f"\n[{get_color('error')}]Operation cancelled[/{get_color('error')}]")
             sys.exit(0)
 
@@ -256,27 +245,27 @@ def edit_with_editor(content: str) -> str:
 
 def show_success(message: str) -> None:
     """Display success message."""
-    console.print(f"[{get_color('success')}]✅ {message}[/{get_color('success')}]")
+    console.print(f"[{get_color('success')}][OK] {message}[/{get_color('success')}]")
 
 
 def show_error(message: str) -> None:
     """Display error message."""
-    console.print(f"[{get_color('error')}]❌ {message}[/{get_color('error')}]")
+    console.print(f"[{get_color('error')}][FAIL] {message}[/{get_color('error')}]")
 
 
 def show_warning(message: str) -> None:
     """Display warning message."""
-    console.print(f"[{get_color('warning')}]⚠️  {message}[/{get_color('warning')}]")
+    console.print(f"[{get_color('warning')}][WARN] {message}[/{get_color('warning')}]")
 
 
 def show_info(message: str) -> None:
     """Display info message."""
-    console.print(f"[{get_color('info')}]ℹ️  {message}[/{get_color('info')}]")
+    console.print(f"[{get_color('info')}][INFO] {message}[/{get_color('info')}]")
 
 
 def show_table(headers: list[str], rows: list[list[str]], title: str = "") -> None:
-    """Display a Rich table."""
-    table = Table(title=title, show_header=True, header_style=get_color("accent"))
+    """Display a minimal table."""
+    table = Table(title=title, show_header=True, header_style=get_color("accent"), box=box.SIMPLE)
     
     for header in headers:
         table.add_column(header, style=get_color("secondary"))
@@ -305,23 +294,28 @@ def prompt_input(message: str, default: Optional[str] = None) -> str:
 
 def show_summary(steps: list[dict]) -> None:
     """Show workflow summary table."""
-    table = Table(title="Workflow Summary", show_header=True, header_style=get_color("accent"))
+    if not steps:
+        return
+    
+    console.print(f"\n[{get_color('primary')}]Workflow Summary:[/{get_color('primary')}]")
+    table = Table(show_header=True, header_style=get_color("accent"), box=box.SIMPLE)
     table.add_column("Step", style=get_color("secondary"))
     table.add_column("Status", style=get_color("secondary"))
     table.add_column("Details", style=get_color("secondary"))
     
     for step in steps:
+        status = step.get("status", "pending").upper()
         status_color = {
-            "success": get_color("success"),
-            "error": get_color("error"),
-            "skipped": get_color("warning"),
-        }.get(step.get("status", "pending"), get_color("info"))
+            "SUCCESS": get_color("success"),
+            "ERROR": get_color("error"),
+            "SKIPPED": get_color("warning"),
+            "RUNNING": get_color("info"),
+        }.get(status, get_color("info"))
         
         table.add_row(
             step.get("name", ""),
-            f"[{status_color}]{step.get('status', 'pending')}[/{status_color}]",
+            f"[{status_color}]{status}[/{status_color}]",
             step.get("details", ""),
         )
     
     console.print(table)
-

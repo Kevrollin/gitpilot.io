@@ -73,8 +73,8 @@ For more information, visit: https://github.com/your-repo/gitpilot
         "-t",
         type=str,
         choices=["hacker", "minimal", "developer"],
-        default="hacker",
-        help="UI theme: hacker (default), minimal, or developer",
+        default="minimal",
+        help="UI theme: minimal (default), hacker, or developer",
     )
     
     parser.add_argument(

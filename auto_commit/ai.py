@@ -77,17 +77,14 @@ Commit message:"""
         used_model = None
         last_error = None
         
-        # Try each model until one works
+        # Try each model until one works (silently in background)
         for model_name in model_names:
             try:
-                if callback:
-                    callback(f"Trying model: {model_name}...")
                 logger.ai_request(model_name, len(prompt))
                 model = genai.GenerativeModel(model_name)
                 response = model.generate_content(prompt)
                 used_model = model_name
-                if callback:
-                    callback(f"✅ Using model: {model_name}")
+                logger.info(f"Using model: {model_name}")
                 break  # Success!
             except Exception as e:
                 last_error = e
@@ -103,8 +100,7 @@ Commit message:"""
         if response is None:
             # If all models failed, try listing available models as last resort
             try:
-                if callback:
-                    callback("Discovering available models...")
+                logger.debug("Discovering available models...")
                 models = genai.list_models()
                 for model in models:
                     if 'generateContent' in model.supported_generation_methods:
@@ -114,8 +110,7 @@ Commit message:"""
                             model_obj = genai.GenerativeModel(model_name)
                             response = model_obj.generate_content(prompt)
                             used_model = model_name
-                            if callback:
-                                callback(f"✅ Using discovered model: {model_name}")
+                            logger.info(f"Using discovered model: {model_name}")
                             break
                         except Exception:
                             continue
