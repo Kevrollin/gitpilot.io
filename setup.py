@@ -8,9 +8,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
 with open("requirements.txt", "r", encoding="utf-8") as fh:
     requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
+# Get version from package
+try:
+    from auto_commit import __version__
+    version = __version__
+except ImportError:
+    version = "0.1.0"
+
 setup(
     name="auto-commit-assistant",
-    version="0.1",
+    version=version,
     author="Gitpilot",
     description="Automatically stage, analyze, commit, and push Git changes using AI",
     long_description=long_description,
@@ -32,7 +39,7 @@ setup(
     py_modules=["cli"],
     entry_points={
         "console_scripts": [
-            "autocommit=cli:run_auto_commit",
+            "autocommit=cli:main",
         ],
     },
 )

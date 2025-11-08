@@ -28,89 +28,96 @@ The tool features a beautiful terminal interface with:
 
 ## 🚀 Installation
 
-### Recommended: Using a Virtual Environment
+### Quick Install (Recommended)
 
-**Yes, using a virtual environment is strongly recommended!** This keeps the project dependencies isolated from your system Python packages and prevents conflicts.
+**Install directly from the Git repository** (recommended for easy updates):
 
-1. **Navigate to the project directory:**
+```bash
+pip install git+https://github.com/your-username/auto-commit-assistant.git
+```
+
+Or use the install script:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/your-username/auto-commit-assistant/main/install.sh | bash
+```
+
+### Alternative: Local Development Installation
+
+If you want to develop or customize Gitpilot:
+
+1. **Clone the repository:**
    ```bash
+   git clone https://github.com/your-username/auto-commit-assistant.git
    cd auto_commit_assistant
    ```
 
-2. **Create a virtual environment:**
-   ```bash
-   python3 -m venv venv
-   ```
-
-3. **Activate the virtual environment:**
-   
-   **Linux/macOS:**
-   ```bash
-   source venv/bin/activate
-   ```
-   
-   You'll see `(venv)` in your terminal prompt when it's active.
-
-4. **Install the package and dependencies:**
+2. **Install in development mode:**
    ```bash
    pip install -e .
    ```
-   
-   This will automatically install all dependencies from `requirements.txt`:
-   - `google-generativeai` - Gemini API client
-   - `python-dotenv` - Environment variable management
-   - `rich` - Beautiful terminal UI
 
-5. **Set up your Gemini API key:**
-   
-   Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey) or [Google Cloud Console](https://console.cloud.google.com/).
-   
-   You can set it up in one of these ways:
-   
-   **Option 1: Using a .env file (Recommended for projects):**
-   ```bash
-   echo 'GEMINI_API_KEY=your-api-key-here' > .env
-   ```
-   
-   Create a `.env` file in your project directory with your API key. This file is already in `.gitignore`, so it won't be committed.
-   
-   **Option 2: Environment variable (Current session only):**
-   ```bash
-   export GEMINI_API_KEY="your-api-key-here"
-   ```
-   
-   **Option 3: Persistent environment variable:**
-   ```bash
-   echo 'export GEMINI_API_KEY="your-api-key-here"' >> ~/.bashrc
-   source ~/.bashrc
-   ```
-   
-   The tool will automatically load from a `.env` file if it exists in your project directory, or from environment variables.
+### Set Up Your Gemini API Key
 
-6. **Deactivate the virtual environment when done (optional):**
-   ```bash
-   deactivate
-   ```
+Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey) or [Google Cloud Console](https://console.cloud.google.com/).
 
-**Note:** Remember to activate the virtual environment (`source venv/bin/activate`) each time you want to use the `autocommit` command, or the command won't be available.
-
-### Alternative: Install Without Virtual Environment
-
-If you prefer not to use a virtual environment (not recommended), you can install directly:
-
+**Option 1: Using a .env file (Recommended for projects):**
 ```bash
-cd auto_commit_assistant
-pip install -e .
+echo 'GEMINI_API_KEY=your-api-key-here' > .env
 ```
 
-**Warning:** This installs packages system-wide and may cause conflicts with other Python projects.
+**Option 2: Environment variable:**
+```bash
+export GEMINI_API_KEY="your-api-key-here"
+```
+
+**Option 3: Persistent environment variable:**
+```bash
+echo 'export GEMINI_API_KEY="your-api-key-here"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+The tool will automatically load from a `.env` file if it exists in your project directory, or from environment variables.
+
+## 🔄 Updating Gitpilot
+
+### Automatic Update
+
+Update to the latest version:
+
+```bash
+autocommit --update
+```
+
+### Check for Updates
+
+Check if updates are available:
+
+```bash
+autocommit --check-updates
+```
+
+### Manual Update
+
+If you installed from git, update manually:
+
+```bash
+pip install --upgrade --force-reinstall git+https://github.com/your-username/auto-commit-assistant.git
+```
+
+**Note:** After updating, restart your terminal or run `hash -r` to refresh command cache.
+
+### Configure Repository URL
+
+If you're using a custom or private repository, set the repository URL:
+
+```bash
+export GITPILOT_REPO_URL="https://github.com/your-org/auto-commit-assistant.git"
+```
+
+Add this to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.) to make it permanent.
 
 ## 📖 Usage
-
-**Important:** Make sure your virtual environment is activated (if you're using one):
-```bash
-source venv/bin/activate
-```
 
 ### Basic Usage
 
@@ -195,6 +202,18 @@ autocommit --theme developer
 Show version information:
 ```bash
 autocommit --version
+```
+
+#### `--update` / `-u`
+Update Gitpilot to the latest version:
+```bash
+autocommit --update
+```
+
+#### `--check-updates`
+Check if updates are available:
+```bash
+autocommit --check-updates
 ```
 
 ### Usage Examples

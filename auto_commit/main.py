@@ -10,7 +10,7 @@ from .ai import generate_commit_message
 from .ui import (
     show_banner, show_step, show_spinner, show_panel, show_commit_preview,
     show_success, show_error, show_warning, show_info, confirm, prompt_input,
-    show_summary, edit_with_editor, set_theme
+    show_summary, edit_with_editor, set_theme, show_footer
 )
 from .logger import init_logger, get_logger
 
@@ -123,18 +123,19 @@ class AutoCommitWorkflow:
             # Show summary
             if not self.quiet:
                 self._show_summary()
+                show_footer(success=True)
             
             self.logger.info("Workflow completed successfully")
             return 0
             
         except KeyboardInterrupt:
             if not self.quiet:
-                show_warning("Operation cancelled by user")
+                show_footer(success=False, message="Cancelled")
             self.logger.warning("Operation cancelled by user")
             return 1
         except Exception as e:
             if not self.quiet:
-                show_error(str(e))
+                show_footer(success=False, message=str(e)[:50])
             self.logger.error(f"Workflow error: {str(e)}")
             return 1
     

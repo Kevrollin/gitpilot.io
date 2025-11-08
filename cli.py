@@ -3,6 +3,9 @@
 import argparse
 import sys
 from auto_commit.main import run_auto_commit
+from auto_commit.updater import update_from_git, check_for_updates, get_repo_url, get_installed_version
+from auto_commit.ui import show_info, show_success, show_error, show_warning, set_theme
+from auto_commit import __version__
 
 
 def main():
@@ -79,12 +82,52 @@ For more information, visit: https://github.com/your-repo/gitpilot
     
     parser.add_argument(
         "--version",
+        "-v",
         action="version",
-        version="Gitpilot 0.1.0",
+        version=f"Gitpilot {__version__}",
+    )
+    
+    parser.add_argument(
+        "--update",
+        "-u",
+        action="store_true",
+        help="Update Gitpilot to the latest version from repository",
+    )
+    
+    parser.add_argument(
+        "--check-updates",
+        action="store_true",
+        help="Check if updates are available",
     )
     
     # Parse arguments - this will handle --help and --version automatically
     args = parser.parse_args()
+    
+    # Handle update commands first
+    if args.update:
+        set_theme(args.theme)
+        show_info("Checking for updates...")
+        repo_url = get_repo_url()
+        show_info(f"Repository: {repo_url}")
+        show_info(f"Current version: {get_installed_version()}")
+        
+        if update_from_git(repo_url, quiet=args.quiet):
+            show_success("Update completed! Please restart your terminal.")
+            sys.exit(0)
+        else:
+            show_error("Update failed. Check logs for details.")
+            sys.exit(1)
+    
+    if args.check_updates:
+        set_theme(args.theme)
+        show_info(f"Current version: {get_installed_version()}")
+        has_updates, latest = check_for_updates()
+        if has_updates:
+            show_warning(f"Updates available (latest: {latest})")
+            show_info("Run 'autocommit --update' to update")
+        else:
+            show_success("You're running the latest version")
+        sys.exit(0)
     
     # Run the workflow (only if we get here, --help and --version have been handled)
     exit_code = run_auto_commit(
