@@ -36,7 +36,7 @@ def run_auto_commit() -> None:
             commit_message = generate_commit_message(diff_text)
             print(f"📝 Generated message: {commit_message}")
             
-            # Make initial commit
+            # Make initial commit message
             commit(commit_message)
             
             # Push if remote was provided
