@@ -27,7 +27,7 @@ def run_cmd(cmd: list[str]) -> str:
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         error_msg = e.stdout.strip() if e.stdout else str(e)
-        raise Exception(f"❌ Git command failed: {' '.join(cmd)}\n{error_msg}")
+        raise Exception(f" Git command failed: {' '.join(cmd)}\n{error_msg}")
 
 
 def add_all() -> None:

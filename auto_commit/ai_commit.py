@@ -43,61 +43,7 @@ def generate_commit_message(diff_text: str) -> str:
     try:
         genai.configure(api_key=api_key)
         
-        # First, try to list available models to find a working one
-        available_model = None
-        try:
-            # List available models
-            models = genai.list_models()
-            for model in models:
-                # Look for models that support generateContent
-                if 'generateContent' in model.supported_generation_methods:
-                    model_name = model.name.replace('models/', '')
-                    # Prefer flash models (faster and cheaper)
-                    if 'flash' in model_name.lower():
-                        available_model = model_name
-                        break
-                    # Otherwise use the first available model
-                    if available_model is None:
-                        available_model = model_name
-        except Exception as e:
-            # If listing models fails, fall back to trying common names
-            pass
-        
-        # If no model found from listing, try common model names
-        if available_model is None:
-            model_names = [
-                'gemini-1.5-flash',
-                'gemini-1.5-pro',
-                'gemini-1.0-pro-latest',
-                'gemini-1.0-pro',
-                'gemini-pro',
-            ]
-            
-            # Try each model name
-            for model_name in model_names:
-                try:
-                    model = genai.GenerativeModel(model_name)
-                    # Try a simple test generation to verify it works
-                    test_response = model.generate_content("test")
-                    available_model = model_name
-                    break
-                except Exception:
-                    continue
-        
-        if available_model is None:
-            raise Exception(
-                "❌ Could not find an available Gemini model.\n\n"
-                "This might be due to:\n"
-                "1. API key doesn't have access to Gemini models\n"
-                "2. API key is invalid or expired\n"
-                "3. Network/connectivity issues\n\n"
-                "Please verify your API key at: https://makersuite.google.com/app/apikey\n"
-                "And check available models at: https://ai.google.dev/models/gemini"
-            )
-        
-        # Use the available model
-        model = genai.GenerativeModel(available_model)
-        
+        # Prepare the prompt
         prompt = f"""Analyze the following git diff and generate a concise, professional commit message.
         
 The commit message should:
@@ -111,7 +57,75 @@ Git diff:
 
 Commit message:"""
         
-        response = model.generate_content(prompt)
+        # Try common model names directly (faster than listing)
+        # Order: try faster/cheaper models first
+        model_names = [
+            'gemini-1.5-flash',
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-pro',
+            'gemini-1.5-pro-latest',
+            'gemini-1.0-pro',
+            'gemini-1.0-pro-latest',
+        ]
+        
+        response = None
+        used_model = None
+        last_error = None
+        
+        # Try each model until one works
+        for model_name in model_names:
+            try:
+                print(f"   Trying model: {model_name}...", end="", flush=True)
+                model = genai.GenerativeModel(model_name)
+                response = model.generate_content(prompt)
+                used_model = model_name
+                print(" ✅", flush=True)
+                break  # Success!
+            except Exception as e:
+                last_error = e
+                error_str = str(e).lower()
+                # If it's a 404/model not found, try next model
+                if "404" in error_str or "not found" in error_str or "not supported" in error_str:
+                    print(" ❌ (not available)", flush=True)
+                    continue
+                # For other errors, print and try next model
+                print(f" ❌ ({str(e)[:50]}...)", flush=True)
+                continue
+        
+        if response is None:
+            # If all models failed, try listing available models as last resort
+            try:
+                print("   Discovering available models...", flush=True)
+                models = genai.list_models()
+                for model in models:
+                    if 'generateContent' in model.supported_generation_methods:
+                        model_name = model.name.replace('models/', '')
+                        try:
+                            print(f"   Trying discovered model: {model_name}...", end="", flush=True)
+                            model_obj = genai.GenerativeModel(model_name)
+                            response = model_obj.generate_content(prompt)
+                            used_model = model_name
+                            print(" ✅", flush=True)
+                            break
+                        except Exception:
+                            print(" ❌", flush=True)
+                            continue
+            except Exception as list_error:
+                pass  # Listing also failed
+        
+        if response is None:
+            error_details = str(last_error) if last_error else "Unknown error"
+            raise Exception(
+                f"❌ Could not find an available Gemini model.\n\n"
+                f"Tried models: {', '.join(model_names)}\n"
+                f"Last error: {error_details[:200]}\n\n"
+                f"This might be due to:\n"
+                f"1. API key doesn't have access to Gemini models\n"
+                f"2. API key is invalid or expired\n"
+                f"3. Network/connectivity issues\n\n"
+                f"Please verify your API key at: https://makersuite.google.com/app/apikey\n"
+                f"And check available models at: https://ai.google.dev/models/gemini"
+            )
         
         # Extract just the commit message, removing any extra formatting
         commit_message = response.text.strip()

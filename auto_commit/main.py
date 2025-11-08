@@ -70,7 +70,7 @@ def run_auto_commit() -> None:
             commit(commit_message)
             push()
             
-            print("\n🎉 Auto-commit completed successfully!")
+            print("\n🎉 Congratulations! Auto-commit completed successfully!")
         
     except KeyboardInterrupt:
         print("\n⚠️  Operation cancelled by user")
