@@ -1,18 +1,32 @@
 # Gitpilot - Auto Commit Assistant
 
-A powerful Python CLI tool that automatically stages all changes in a Git repository, analyzes the diffs using Google's Gemini API, generates clean and professional commit messages, commits the changes, and pushes them to the remote repository. All with a single command: `autocommit`.
+A powerful, interactive Python CLI tool that automatically stages all changes in a Git repository, analyzes the diffs using Google's Gemini API, generates clean and professional commit messages, commits the changes, and pushes them to the remote repository. Features a hacker/dev-inspired Rich terminal UI with spinners, progress bars, and interactive commit message preview.
 
-## Features
+## ✨ Features
 
+- 🎨 **Rich Interactive Terminal UI**: Beautiful hacker/dev-inspired interface with spinners, progress bars, panels, and banners
 - 🤖 **AI-Powered Commit Messages**: Uses Google Gemini API to generate intelligent, context-aware commit messages
 - 📦 **Automatic Staging**: Automatically stages all changes in the repository
 - 🔍 **Smart Analysis**: Analyzes git diffs to understand what changed
-- 💾 **Auto Commit & Push**: Commits and pushes changes automatically
+- 💾 **Interactive Preview**: Preview, edit, or manually enter commit messages before committing
+- 🚀 **Auto Commit & Push**: Commits and pushes changes automatically
 - ✅ **Graceful Handling**: Exits cleanly if there are no changes to commit
-- 🎨 **Clean CLI Output**: Beautiful output with emojis and helpful messages
+- 🎯 **CLI Flags**: Full automation support with `--yes`, `--dry-run`, `--skip-ai`, `--branch`, `--quiet`, `--log`
+- 📝 **File Logging**: Optional logging to file for debugging and audit trails
+- 🎨 **Multiple Themes**: Choose from `hacker`, `minimal`, or `developer` themes
 - 🐧 **Cross-Platform**: Compatible with Linux and macOS
 
-## Installation
+## 📸 Screenshots
+
+The tool features a beautiful terminal interface with:
+- ASCII banner with timestamp
+- Step-by-step progress indicators
+- Spinners during network operations
+- Rich panels for commit message preview
+- Interactive prompts for editing messages
+- Summary tables showing workflow status
+
+## 🚀 Installation
 
 ### Recommended: Using a Virtual Environment
 
@@ -42,7 +56,10 @@ A powerful Python CLI tool that automatically stages all changes in a Git reposi
    pip install -e .
    ```
    
-   This will automatically install all dependencies from `requirements.txt`.
+   This will automatically install all dependencies from `requirements.txt`:
+   - `google-generativeai` - Gemini API client
+   - `python-dotenv` - Environment variable management
+   - `rich` - Beautiful terminal UI
 
 5. **Set up your Gemini API key:**
    
@@ -88,12 +105,14 @@ pip install -e .
 
 **Warning:** This installs packages system-wide and may cause conflicts with other Python projects.
 
-## Usage
+## 📖 Usage
 
 **Important:** Make sure your virtual environment is activated (if you're using one):
 ```bash
 source venv/bin/activate
 ```
+
+### Basic Usage
 
 1. **Navigate to your project directory:**
    ```bash
@@ -104,6 +123,121 @@ source venv/bin/activate
    ```bash
    autocommit
    ```
+
+That's it! The tool will:
+- Display a beautiful banner
+- Show step-by-step progress
+- Stage all your changes
+- Analyze the diffs
+- Generate a commit message using AI
+- Show an interactive preview where you can accept, edit, or replace the message
+- Commit the changes
+- Push to the remote repository
+
+### Interactive Commit Message Preview
+
+After AI generates a commit message, you'll see an interactive preview with options:
+
+1. **Accept and continue** - Use the AI-generated message as-is
+2. **Edit message inline** - Modify the message directly in the terminal
+3. **Edit in editor** - Open your `$EDITOR` (default: nano) to edit the message
+4. **Enter manual message** - Replace with your own commit message
+5. **Cancel** - Exit without committing
+
+### CLI Flags
+
+The tool supports various CLI flags for automation and customization:
+
+#### `--yes` / `-y`
+Auto-accept AI-generated commit messages without preview:
+```bash
+autocommit --yes
+```
+
+#### `--dry-run` / `-d`
+Simulate all operations without committing or pushing:
+```bash
+autocommit --dry-run
+```
+
+#### `--skip-ai` / `-s`
+Skip AI generation and prompt for manual commit message:
+```bash
+autocommit --skip-ai
+```
+
+#### `--branch` / `-b <name>`
+Commit to a specific branch (will create if it doesn't exist):
+```bash
+autocommit --branch feature/new-feature
+```
+
+#### `--quiet` / `-q`
+Suppress non-essential output (useful for scripting):
+```bash
+autocommit --quiet
+```
+
+#### `--log` / `-l <file>`
+Log all operations to a specified file:
+```bash
+autocommit --log autocommit.log
+```
+
+#### `--theme` / `-t <theme>`
+Choose UI theme: `hacker` (default), `minimal`, or `developer`:
+```bash
+autocommit --theme minimal
+autocommit --theme developer
+```
+
+#### `--version` / `-v`
+Show version information:
+```bash
+autocommit --version
+```
+
+### Usage Examples
+
+**Interactive mode with AI:**
+```bash
+autocommit
+```
+
+**Auto-accept AI messages:**
+```bash
+autocommit --yes
+```
+
+**Dry run to see what would happen:**
+```bash
+autocommit --dry-run
+```
+
+**Skip AI and enter manual message:**
+```bash
+autocommit --skip-ai
+```
+
+**Commit to specific branch:**
+```bash
+autocommit --branch feature/add-login
+```
+
+**Quiet mode with logging:**
+```bash
+autocommit --quiet --log commits.log
+```
+
+**Use minimal theme:**
+```bash
+autocommit --theme minimal
+```
+
+**Combine flags:**
+```bash
+autocommit --yes --branch main --log commits.log --theme developer
+```
 
 ### First-Time Setup
 
@@ -124,18 +258,28 @@ If the directory is **not** a Git repository, the tool will:
 
 **Note:** For new repositories, the tool will create an initial commit with an AI-generated message based on all your files. It won't check for "changes" since everything is new.
 
-### Normal Usage
+## 🏗️ Project Structure
 
-Once a git repository is set up, the tool will:
-- Stage all your changes
-- Analyze the diffs
-- Generate a commit message using AI
-- Commit the changes
-- Push to the remote repository
+```
+auto_commit_assistant/
+│
+├── auto_commit/
+│   ├── __init__.py
+│   ├── main.py          # Main orchestration logic with Rich UI
+│   ├── git_ops.py       # Git operations (refactored, no prints)
+│   ├── ai.py            # AI commit message generation (refactored)
+│   ├── ui.py            # Rich terminal UI components
+│   ├── logger.py        # Logging module
+│   └── git_handler.py   # Legacy (deprecated, use git_ops.py)
+│
+├── cli.py               # CLI entry point with argparse
+├── setup.py             # Package configuration
+├── requirements.txt     # Dependencies
+├── README.md           # This file
+└── .gitignore          # Git ignore rules
+```
 
-If there are no changes, it will exit gracefully with a message.
-
-## How It Works
+## 🔧 How It Works
 
 ### For New Repositories (First-Time Setup):
 1. **Detect No Repo**: Detects that no git repository exists
@@ -152,42 +296,30 @@ If there are no changes, it will exit gracefully with a message.
 3. **Get Diff**: Retrieves the staged diff using `git diff --cached`
 4. **Check for Changes**: If no changes are found, exits gracefully
 5. **Generate Message**: Sends the diff to Gemini API to generate a commit message
-6. **Commit**: Commits the changes with the generated message
-7. **Push**: Pushes the changes to the remote repository (sets upstream if needed)
+6. **Preview Message**: Shows interactive preview with edit options
+7. **Commit**: Commits the changes with the final message
+8. **Push**: Pushes the changes to the remote repository (sets upstream if needed)
 
-## Project Structure
-
-```
-auto_commit_assistant/
-│
-├── auto_commit/
-│   ├── __init__.py
-│   ├── main.py          # Main orchestration logic
-│   ├── git_handler.py   # Git operations
-│   └── ai_commit.py     # AI commit message generation
-│
-├── cli.py               # CLI entry point
-├── setup.py             # Package configuration
-├── requirements.txt     # Dependencies
-└── README.md           # This file
-```
-
-## Requirements
+## 📋 Requirements
 
 - Python 3.8 or higher
 - Git installed and configured
 - Google Gemini API key
 - `google-generativeai` library
+- `python-dotenv` library
+- `rich` library (for terminal UI)
 
-## Error Handling
+## 🐛 Error Handling
 
 The tool includes comprehensive error handling:
 - Validates that `GEMINI_API_KEY` is set
 - Checks if Git commands succeed
 - Handles empty diffs gracefully
-- Provides clear error messages
+- Provides clear error messages with Rich formatting
+- Logs all operations for debugging
+- Graceful fallbacks if AI generation fails
 
-## Testing
+## 🧪 Testing
 
 To test the installation:
 
@@ -213,12 +345,18 @@ To test the installation:
 5. **Test with changes:**
    - Make a small change to any file
    - Run `autocommit`
-   - It should stage, commit, and push your changes
+   - It should stage, show preview, commit, and push your changes
 
-## Troubleshooting
+6. **Test dry run:**
+   ```bash
+   autocommit --dry-run
+   ```
+   - Should simulate all operations without actually committing/pushing
 
-### "GEMINI_API_KEY environment variable is not set"
-Make sure you've exported the API key as an environment variable. See the Installation section above.
+## 🐛 Troubleshooting
+
+### "GEMINI_API_KEY not found"
+Make sure you've set the API key using one of the methods in the Installation section above.
 
 ### "Git command failed"
 - If you're not in a Git repository, the tool will automatically prompt you to set one up
@@ -234,15 +372,53 @@ Make sure:
 - Your virtual environment is activated (if using one)
 - The virtual environment's `bin` directory is in your PATH
 
-## License
+### "Failed to generate commit message"
+- Check your internet connection
+- Verify your API key is valid and has access to Gemini models
+- Check the log file (if using `--log`) for detailed error messages
+- Try using `--skip-ai` to enter a manual commit message
 
-MIT License
+### Rich UI not displaying correctly
+- Make sure your terminal supports ANSI colors
+- Try using a different theme: `--theme minimal`
+- Check terminal compatibility (works best with modern terminals like iTerm2, Terminator, etc.)
 
-## Contributing
+## 🎨 Themes
+
+The tool supports three themes:
+
+- **hacker** (default): Green/cyan colors, hacker/dev aesthetic
+- **minimal**: Blue/white colors, clean and minimal
+- **developer**: Cyan/magenta colors, modern developer style
+
+Choose a theme with the `--theme` flag:
+```bash
+autocommit --theme minimal
+```
+
+## 📝 Logging
+
+Enable file logging with the `--log` flag:
+```bash
+autocommit --log autocommit.log
+```
+
+The log file will contain:
+- All git commands executed
+- AI API requests and responses
+- Workflow steps and status
+- Error messages and stack traces
+- Timestamps for all operations
+
+## 🤝 Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
-## Author
+## 📄 License
+
+MIT License
+
+## 👤 Author
 
 Gitpilot
 
@@ -250,3 +426,4 @@ Gitpilot
 
 **Note**: The tool will automatically detect if you're in a Git repository. If not, it will prompt you to set one up, so you can use `autocommit` in any directory!
 
+**Happy committing! 🚀**
