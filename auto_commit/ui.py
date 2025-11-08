@@ -162,28 +162,28 @@ def show_commit_preview(commit_message: str, diff_summary: str = "") -> str:
     console.print(f"\n[{get_color('accent')}]{commit_message}[/{get_color('accent')}]")
     
     # Simplified options
-    choice = Prompt.ask(
+        choice = Prompt.ask(
         f"[{get_color('info')}](1) Accept  (2) Edit  (3) Manual  (4) Cancel[/{get_color('info')}]",
         choices=["1", "2", "3", "4"],
-        default="1",
-    )
-    
-    if choice == "1":
-        return commit_message
-    elif choice == "2":
-        edited = Prompt.ask(
+            default="1",
+        )
+        
+        if choice == "1":
+            return commit_message
+        elif choice == "2":
+            edited = Prompt.ask(
             f"[{get_color('accent')}]Edit:[/{get_color('accent')}]",
-            default=commit_message,
-        )
-        return edited.strip()
-    elif choice == "3":
-        manual = Prompt.ask(
+                default=commit_message,
+            )
+            return edited.strip()
+        elif choice == "3":
+            manual = Prompt.ask(
             f"[{get_color('warning')}]Message:[/{get_color('warning')}]",
-        )
-        return manual.strip()
-    else:
+            )
+            return manual.strip()
+        else:
         console.print(f"[{get_color('error')}]Cancelled[/{get_color('error')}]")
-        sys.exit(0)
+            sys.exit(0)
 
 
 def edit_with_editor(content: str) -> str:

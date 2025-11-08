@@ -57,7 +57,7 @@ pipx install git+ssh://git@github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Option 2: Using pip with --user flag**
-```bash
+   ```bash
 # Try these in order:
 pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 # OR
@@ -71,7 +71,7 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
 **Option 3: Using the install script** (automatically handles everything):
-```bash
+   ```bash
 curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
 
@@ -86,33 +86,33 @@ If you want to develop or customize Gitpilot:
    git clone https://github.com/Kevrollin/gitpilot.io.git
    cd gitpilot.io
    ```
-
+   
 2. **Install in development mode:**
    ```bash
    pip install -e .
    ```
-
+   
 ### Set Up Your Gemini API Key
-
-Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey) or [Google Cloud Console](https://console.cloud.google.com/).
-
-**Option 1: Using a .env file (Recommended for projects):**
-```bash
-echo 'GEMINI_API_KEY=your-api-key-here' > .env
-```
-
+   
+   Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey) or [Google Cloud Console](https://console.cloud.google.com/).
+   
+   **Option 1: Using a .env file (Recommended for projects):**
+   ```bash
+   echo 'GEMINI_API_KEY=your-api-key-here' > .env
+   ```
+   
 **Option 2: Environment variable:**
-```bash
-export GEMINI_API_KEY="your-api-key-here"
-```
-
-**Option 3: Persistent environment variable:**
-```bash
-echo 'export GEMINI_API_KEY="your-api-key-here"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-The tool will automatically load from a `.env` file if it exists in your project directory, or from environment variables.
+   ```bash
+   export GEMINI_API_KEY="your-api-key-here"
+   ```
+   
+   **Option 3: Persistent environment variable:**
+   ```bash
+   echo 'export GEMINI_API_KEY="your-api-key-here"' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+   
+   The tool will automatically load from a `.env` file if it exists in your project directory, or from environment variables.
 
 ## 🔄 Updating dev.mk
 
@@ -120,9 +120,9 @@ The tool will automatically load from a `.env` file if it exists in your project
 
 Update to the latest version:
 
-```bash
+   ```bash
 autocommit --update
-```
+   ```
 
 **Note:** 
 - For **pipx installations**: Uses `pipx upgrade auto-commit-assistant`

@@ -135,6 +135,25 @@ Commit message:"""
         if response is None:
             error_details = str(last_error) if last_error else "Unknown error"
             logger.error(f"Could not find available Gemini model: {error_details}")
+            
+            # Check if it's an API key issue
+            is_api_key_error = "api key" in error_details.lower() or "API_KEY_INVALID" in error_details or "invalid" in error_details.lower()
+            
+            if is_api_key_error:
+                raise Exception(
+                    f"❌ API Key Error: The API key is invalid or expired.\n\n"
+                    f"🔑 To fix this, set your own Gemini API key:\n\n"
+                    f"Option 1 (Recommended): Export it in your terminal:\n"
+                    f"   export GEMINI_API_KEY='your-api-key-here'\n\n"
+                    f"Option 2: Create a .env file in your project:\n"
+                    f"   echo 'GEMINI_API_KEY=your-api-key-here' > .env\n\n"
+                    f"Option 3: Add to your shell config (~/.bashrc or ~/.zshrc):\n"
+                    f"   echo 'export GEMINI_API_KEY=\"your-api-key-here\"' >> ~/.bashrc\n"
+                    f"   source ~/.bashrc\n\n"
+                    f"📝 Get your API key from: https://makersuite.google.com/app/apikey\n\n"
+                    f"💡 The default shared key may have expired. Setting your own key ensures unlimited usage.\n"
+                )
+            else:
             raise Exception(
                 f"Could not find an available Gemini model.\n\n"
                 f"Tried models: {', '.join(model_names)}\n"
@@ -166,6 +185,11 @@ Commit message:"""
     except Exception as e:
         error_msg = str(e)
         logger.error(f"Failed to generate commit message: {error_msg}")
+        
+        # If error already contains helpful instructions, re-raise as-is
+        if "❌ API Key Error" in error_msg or "To fix this, set your own" in error_msg:
+            raise Exception(error_msg)
+        
         if "404" in error_msg or "not found" in error_msg.lower():
             raise Exception(
                 f"Gemini model not found. This might be due to:\n"
@@ -175,5 +199,22 @@ Commit message:"""
                 f"Error details: {error_msg}\n\n"
                 f"Please check: https://ai.google.dev/models/gemini"
             )
+        
+        # Check for API key errors in the exception
+        if "api key" in error_msg.lower() or "API_KEY_INVALID" in error_msg or "invalid" in error_msg.lower():
+            raise Exception(
+                f"❌ API Key Error: The API key is invalid or expired.\n\n"
+                f"🔑 To fix this, set your own Gemini API key:\n\n"
+                f"Option 1 (Recommended): Export it in your terminal:\n"
+                f"   export GEMINI_API_KEY='your-api-key-here'\n\n"
+                f"Option 2: Create a .env file in your project:\n"
+                f"   echo 'GEMINI_API_KEY=your-api-key-here' > .env\n\n"
+                f"Option 3: Add to your shell config (~/.bashrc or ~/.zshrc):\n"
+                f"   echo 'export GEMINI_API_KEY=\"your-api-key-here\"' >> ~/.bashrc\n"
+                f"   source ~/.bashrc\n\n"
+                f"📝 Get your API key from: https://makersuite.google.com/app/apikey\n\n"
+                f"💡 The default shared key may have expired. Setting your own key ensures unlimited usage.\n"
+            )
+        
         raise Exception(f"Failed to generate commit message: {error_msg}")
 
