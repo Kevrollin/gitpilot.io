@@ -67,13 +67,7 @@ def get_color(color_type: str) -> str:
 
 def show_banner() -> None:
     """Display minimal terminal banner."""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    console.print(f"[{get_color('primary')}]╔═══════════════════════════════════════════════════════╗[/{get_color('primary')}]")
-    console.print(f"[{get_color('primary')}]║[/{get_color('primary')}]  [{get_color('accent')}]GITPILOT - AUTO COMMIT ASSISTANT[/{get_color('accent')}]                    [{get_color('primary')}]║[/{get_color('primary')}]")
-    console.print(f"[{get_color('primary')}]║[/{get_color('primary')}]  [{get_color('secondary')}]AI-Powered Git Automation[/{get_color('secondary')}]                          [{get_color('primary')}]║[/{get_color('primary')}]")
-    console.print(f"[{get_color('primary')}]╚═══════════════════════════════════════════════════════╝[/{get_color('primary')}]")
-    console.print(f"[{get_color('info')}]Initialized: {timestamp}[/{get_color('info')}]\n")
+    console.print(f"[{get_color('accent')}]Gitpilot[/{get_color('accent')}]\n")
 
 
 def show_step(step_name: str, status: str = "running", details: str = "") -> None:
@@ -106,10 +100,8 @@ def show_step(step_name: str, status: str = "running", details: str = "") -> Non
     
     color = color_map.get(status, get_color("info"))
     
-    if details:
-        console.print(f"  {marker} [{color}]{step_name}[/{color}] - {details}")
-    else:
-        console.print(f"  {marker} [{color}]{step_name}[/{color}]")
+    # Only show step name, skip details for minimal output
+    console.print(f"{marker} [{color}]{step_name}[/{color}]")
 
 
 def show_spinner(message: str):
