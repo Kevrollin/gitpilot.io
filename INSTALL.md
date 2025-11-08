@@ -16,15 +16,34 @@ chmod +x install.sh
 ./install.sh
 ```
 
-### Option 2: Direct pip install from Git
+### Option 2: Using pipx (Recommended for CLI tools)
 
 ```bash
-# Try these in order:
-pip install git+https://github.com/Kevrollin/gitpilot.io.git
-# OR if 'pip' not found:
-pip3 install git+https://github.com/Kevrollin/gitpilot.io.git
-# OR if 'pip3' not found:
-python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
+# Install pipx first
+sudo apt install pipx  # Linux
+brew install pipx      # macOS
+
+# Install Gitpilot
+pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+
+# Add to PATH (if not already)
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+### Option 3: Direct pip install from Git (with --user flag)
+
+```bash
+# Try these in order (--user flag avoids permission issues):
+pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+pip3 install --user git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+
+# Add to PATH
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
 **If pip is not installed:**
@@ -39,7 +58,7 @@ brew install python3
 python -m ensurepip --upgrade
 ```
 
-### Option 3: Install from local source
+### Option 4: Install from local source
 
 ```bash
 cd auto_commit_assistant
@@ -128,6 +147,28 @@ autocommit --update
 
 ## Troubleshooting
 
+### Externally-managed-environment error
+
+If you see "externally-managed-environment" error (common on Ubuntu 22.04+, Debian 12+):
+
+**Solution 1: Use pipx (Recommended)**
+```bash
+sudo apt install pipx
+pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+**Solution 2: Use --user flag**
+```bash
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+**Solution 3: Use pipx (via install script)**
+```bash
+curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
+```
+
 ### Command not found: pip
 
 If you get `pip: command not found`, try:
@@ -140,7 +181,7 @@ sudo apt install python3-pip
 brew install python3
 
 # Or use python3 -m pip instead
-python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 ### Command not found: autocommit

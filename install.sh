@@ -38,44 +38,70 @@ fi
 echo -e "${GREEN}✓${NC} Python $PYTHON_VERSION found"
 echo ""
 
-# Check if pip is available (either as command or as python module)
-PIP_CMD=""
-if command -v pip3 &> /dev/null; then
-    PIP_CMD="pip3"
-elif python3 -m pip --version &> /dev/null; then
-    PIP_CMD="python3 -m pip"
-else
-    echo -e "${YELLOW}pip is not installed. Installing pip...${NC}"
+# Check if pipx is available (recommended for CLI tools)
+if command -v pipx &> /dev/null; then
+    echo -e "${GREEN}Installing Gitpilot with pipx (recommended)...${NC}"
+    echo ""
+    pipx install "git+${REPO_URL}"
+    INSTALL_SUCCESS=$?
+elif command -v pip3 &> /dev/null || python3 -m pip --version &> /dev/null; then
+    # Use pip with --user flag to avoid externally-managed-environment error
+    echo -e "${GREEN}Installing Gitpilot with pip (user install)...${NC}"
     echo ""
     
-    # Try to install pip using ensurepip (comes with Python 3.4+)
-    if python3 -m ensurepip --upgrade &> /dev/null; then
-        echo -e "${GREEN}✓${NC} pip installed using ensurepip"
-        PIP_CMD="python3 -m pip"
+    PIP_CMD=""
+    if command -v pip3 &> /dev/null; then
+        PIP_CMD="pip3"
     else
-        echo -e "${YELLOW}Could not install pip automatically.${NC}"
+        PIP_CMD="python3 -m pip"
+    fi
+    
+    # Try --user first (avoids externally-managed-environment error)
+    ${PIP_CMD} install --user --upgrade --force-reinstall "git+${REPO_URL}"
+    INSTALL_SUCCESS=$?
+    
+    if [ $INSTALL_SUCCESS -ne 0 ]; then
+        echo -e "${YELLOW}User install failed. Trying with pipx...${NC}"
         echo ""
-        echo "Please install pip manually:"
-        echo "  sudo apt install python3-pip"
+        echo "pipx is the recommended way to install Python applications."
+        echo "Install pipx: sudo apt install pipx"
+        echo "Then run: pipx install git+${REPO_URL}"
         echo ""
-        echo "Or on macOS:"
-        echo "  brew install python3"
-        echo ""
-        echo "Then run this script again."
         exit 1
     fi
+else
+    echo -e "${YELLOW}pip is not available.${NC}"
+    echo ""
+    echo "Recommended: Install pipx (best for CLI tools):"
+    echo "  sudo apt install pipx"
+    echo "  pipx install git+${REPO_URL}"
+    echo ""
+    echo "Alternative: Install pip:"
+    echo "  sudo apt install python3-pip"
+    echo "  pip3 install --user git+${REPO_URL}"
+    exit 1
 fi
 
-echo -e "${GREEN}Installing Gitpilot...${NC}"
-echo ""
-
-# Install from git repository
-${PIP_CMD} install --upgrade --force-reinstall "git+${REPO_URL}"
-
-if [ $? -eq 0 ]; then
+if [ $INSTALL_SUCCESS -eq 0 ]; then
     echo ""
     echo -e "${GREEN}✓${NC} Installation completed successfully!"
     echo ""
+    
+    # Check if autocommit is in PATH
+    if ! command -v autocommit &> /dev/null; then
+        echo -e "${YELLOW}Note: autocommit may not be in your PATH.${NC}"
+        echo ""
+        if command -v pipx &> /dev/null; then
+            echo "If using pipx, make sure pipx's bin directory is in PATH:"
+            echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+        else
+            echo "Add pip's user bin directory to PATH:"
+            echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+            echo "  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.bashrc"
+        fi
+        echo ""
+    fi
+    
     echo -e "${BLUE}Next steps:${NC}"
     echo "1. Set your Gemini API key:"
     echo "   export GEMINI_API_KEY='your-api-key-here'"
@@ -87,7 +113,11 @@ if [ $? -eq 0 ]; then
     echo "   autocommit"
     echo ""
     echo -e "${BLUE}To update Gitpilot in the future, run:${NC}"
-    echo "   autocommit --update"
+    if command -v pipx &> /dev/null; then
+        echo "   pipx upgrade gitpilot"
+    else
+        echo "   autocommit --update"
+    fi
     echo ""
     echo -e "${GREEN}Happy committing! 🚀${NC}"
 else

@@ -4,29 +4,42 @@
 
 ### Step 1: Install Gitpilot (Run anywhere on your machine)
 
-**Option A: One-line install (Recommended)**
+**Option A: Using pipx (Recommended for Linux - avoids permission issues)**
 ```bash
-# Try this first
-pip install git+https://github.com/Kevrollin/gitpilot.io.git
+# Install pipx first (if not installed)
+sudo apt install pipx  # Linux
+brew install pipx      # macOS
 
-# If 'pip' not found, try:
-pip3 install git+https://github.com/Kevrollin/gitpilot.io.git
+# Install Gitpilot with pipx
+pipx install git+https://github.com/Kevrollin/gitpilot.io.git
 
-# If 'pip3' not found, try:
-python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
-
-# If none work, install pip first:
-sudo apt install python3-pip  # Linux
-# or
-brew install python3  # macOS
+# Make sure pipx bin is in PATH (if not already)
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
-**Option B: Using the install script (Handles pip automatically)**
+**Option B: Using pip with --user flag (Alternative)**
+```bash
+# Try these in order:
+pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+pip3 install --user git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+
+# Add to PATH
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+**Option C: Using the install script (Handles everything automatically)**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
 
 **Where to run:** You can run this command from **any directory** - it installs Gitpilot globally on your system.
+
+**Note:** On newer Linux systems (Ubuntu 22.04+, Debian 12+), you may see an "externally-managed-environment" error. Use `pipx` (Option A) or `--user` flag (Option B) to avoid this.
 
 ### Step 2: Set Your API Key
 
@@ -104,14 +117,25 @@ This automatically pulls the latest version from the repository.
 
 ## ❓ Troubleshooting
 
+**Externally-managed-environment error?**
+```bash
+# Use pipx (recommended)
+sudo apt install pipx
+pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+
+# OR use --user flag
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+export PATH="$HOME/.local/bin:$PATH"
+```
+
 **pip/pip3 not found?**
 ```bash
 # Install pip first
 sudo apt install python3-pip  # Linux
 brew install python3  # macOS
 
-# Or use python3 -m pip
-python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
+# Or use python3 -m pip with --user
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Command not found: autocommit?**
@@ -123,9 +147,15 @@ export PATH="$HOME/.local/bin:$PATH"
 python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
-**Permission errors?**
+**Permission errors or externally-managed-environment?**
 ```bash
+# Use pipx (best solution)
+sudo apt install pipx
+pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+
+# OR use --user flag
 python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
 **Need help?**

@@ -30,33 +30,40 @@ The tool features a beautiful terminal interface with:
 
 ### Quick Install (Recommended)
 
-**Install directly from the Git repository** (recommended for easy updates):
-
+**Option 1: Using pipx (Recommended for Linux - avoids permission issues)**
 ```bash
-# Try these in order if one doesn't work:
-pip install git+https://github.com/Kevrollin/gitpilot.io.git
-# OR
-pip3 install git+https://github.com/Kevrollin/gitpilot.io.git
-# OR
-python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
+# Install pipx first
+sudo apt install pipx  # Linux
+brew install pipx      # macOS
+
+# Install Gitpilot
+pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+
+# Add to PATH
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
-**If pip is not installed:**
+**Option 2: Using pip with --user flag**
 ```bash
-# Linux
-sudo apt install python3-pip
+# Try these in order:
+pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+pip3 install --user git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 
-# macOS  
-brew install python3
-
-# Then try the install command again
+# Add to PATH
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
-**Or use the install script** (automatically handles pip installation):
-
+**Option 3: Using the install script** (automatically handles everything):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
+
+**Note:** On newer Linux systems (Ubuntu 22.04+, Debian 12+), you may encounter an "externally-managed-environment" error. Use `pipx` (Option 1) or `--user` flag (Option 2) to avoid this issue.
 
 ### Alternative: Local Development Installation
 
