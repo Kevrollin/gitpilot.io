@@ -70,23 +70,39 @@ $RELEASE_NOTES"
 echo -e "${GREEN}✓${NC} Tag created: v$NEW_VERSION"
 echo ""
 
+# Get current branch name
+CURRENT_BRANCH=$(git branch --show-current)
+if [ -z "$CURRENT_BRANCH" ]; then
+    # Fallback if --show-current is not supported
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+fi
+
 # Ask to push
 read -p "Push to GitHub? (y/n): " PUSH
 if [ "$PUSH" = "y" ] || [ "$PUSH" = "Y" ]; then
     echo -e "${BLUE}Pushing to GitHub...${NC}"
-    git push origin main
+    echo -e "${BLUE}Current branch: ${CURRENT_BRANCH}${NC}"
+    git push origin "$CURRENT_BRANCH"
     git push origin "v$NEW_VERSION"
     echo -e "${GREEN}✓${NC} Pushed to GitHub"
     echo ""
-    echo -e "${GREEN}Release v$NEW_VERSION will be created automatically via GitHub Actions!${NC}"
+    echo -e "${GREEN}Tag v$NEW_VERSION pushed to GitHub!${NC}"
     echo ""
     echo -e "${BLUE}Next steps:${NC}"
+    echo ""
+    echo -e "${YELLOW}If GitHub Actions is enabled:${NC}"
     echo "1. Wait for GitHub Actions to build and create the release"
-    echo "2. Check: https://github.com/Kevrollin/gitpilot.io/releases"
-    echo "3. Edit the release notes if needed"
+    echo "2. Check: https://github.com/Kevrollin/gitpilot.io/actions"
+    echo "3. Check: https://github.com/Kevrollin/gitpilot.io/releases"
+    echo ""
+    echo -e "${YELLOW}If GitHub Actions is not available:${NC}"
+    echo "1. Build package: python3 -m pip install --upgrade build wheel && python3 -m build"
+    echo "2. Create release manually: ./scripts/create_release_manual.sh $NEW_VERSION"
+    echo "3. Or use GitHub web interface: https://github.com/Kevrollin/gitpilot.io/releases/new"
+    echo "4. See MANUAL_RELEASE.md for detailed instructions"
 else
     echo -e "${YELLOW}Tag created locally. Push manually with:${NC}"
-    echo "  git push origin main"
+    echo "  git push origin $CURRENT_BRANCH"
     echo "  git push origin v$NEW_VERSION"
 fi
 

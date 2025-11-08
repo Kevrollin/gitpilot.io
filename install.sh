@@ -13,7 +13,8 @@ NC='\033[0m' # No Color
 REPO_URL="${GITPILOT_REPO_URL:-https://github.com/Kevrollin/gitpilot.io.git}"
 
 echo -e "${BLUE}╔═══════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║${NC}  ${GREEN}Gitpilot - Auto Commit Assistant${NC}                    ${BLUE}║${NC}"
+echo -e "${BLUE}║${NC}  ${GREEN}dev.mk - Auto Commit Assistant${NC}                     ${BLUE}║${NC}"
+echo -e "${BLUE}║${NC}  ${GREEN}By Kelvin Mukaria${NC}                                   ${BLUE}║${NC}"
 echo -e "${BLUE}║${NC}  AI-Powered Git Automation                          ${BLUE}║${NC}"
 echo -e "${BLUE}╚═══════════════════════════════════════════════════════╝${NC}"
 echo ""
@@ -46,7 +47,7 @@ if command -v pipx &> /dev/null; then
     INSTALL_SUCCESS=$?
 elif command -v pip3 &> /dev/null || python3 -m pip --version &> /dev/null; then
     # Use pip with --user flag to avoid externally-managed-environment error
-    echo -e "${GREEN}Installing Gitpilot with pip (user install)...${NC}"
+    echo -e "${GREEN}Installing dev.mk with pip (user install)...${NC}"
     echo ""
     
     PIP_CMD=""
@@ -103,18 +104,18 @@ if [ $INSTALL_SUCCESS -eq 0 ]; then
     fi
     
     echo -e "${BLUE}Next steps:${NC}"
-    echo "1. Set your Gemini API key:"
-    echo "   export GEMINI_API_KEY='your-api-key-here'"
-    echo ""
-    echo "2. Or create a .env file in your project:"
-    echo "   echo 'GEMINI_API_KEY=your-api-key-here' > .env"
-    echo ""
-    echo "3. Use Gitpilot in any git repository:"
+    echo "1. Use dev.mk in any git repository:"
     echo "   autocommit"
     echo ""
-    echo -e "${BLUE}To update Gitpilot in the future, run:${NC}"
+    echo "2. (Optional) Set your own Gemini API key for unlimited usage:"
+    echo "   export GEMINI_API_KEY='your-api-key-here'"
+    echo ""
+    echo -e "${BLUE}Note:${NC} dev.mk works out of the box with a built-in API key."
+    echo "Set your own key for unlimited usage and better performance."
+    echo ""
+    echo -e "${BLUE}To update dev.mk in the future, run:${NC}"
     if command -v pipx &> /dev/null; then
-        echo "   pipx upgrade gitpilot"
+        echo "   pipx upgrade auto-commit-assistant"
     else
         echo "   autocommit --update"
     fi

@@ -11,6 +11,12 @@ load_dotenv()
 
 logger = get_logger()
 
+# Default API key for dev.mk - shared key with rate limits
+# Users can override with their own key via GEMINI_API_KEY environment variable
+# WARNING: This is a shared key. For production use, get your own key from:
+# https://makersuite.google.com/app/apikey
+DEFAULT_API_KEY = os.getenv("DEV_MK_GEMINI_API_KEY", "AIzaSyDlRRsBadF_FmGwyhNeZqYubEVEeACDrrUs")
+
 
 def generate_commit_message(diff_text: str, callback=None) -> str:
     """
@@ -27,8 +33,13 @@ def generate_commit_message(diff_text: str, callback=None) -> str:
         ValueError: If GEMINI_API_KEY is not set
         Exception: If API call fails
     """
-    # Try to load API key from environment variable or .env file
-    api_key = os.getenv("GEMINI_API_KEY")
+    # Try to load API key in order of priority:
+    # 1. User's own key (GEMINI_API_KEY)
+    # 2. Default shared key (DEV_MK_GEMINI_API_KEY)
+    api_key = os.getenv("GEMINI_API_KEY") or DEFAULT_API_KEY
+    
+    using_default_key = not os.getenv("GEMINI_API_KEY") and DEFAULT_API_KEY
+    
     if not api_key:
         error_msg = (
             "GEMINI_API_KEY not found\n\n"
@@ -40,9 +51,13 @@ def generate_commit_message(diff_text: str, callback=None) -> str:
             "Option 3: Add it to ~/.bashrc or ~/.zshrc for persistence:\n"
             "   echo 'export GEMINI_API_KEY=\"your-api-key-here\"' >> ~/.bashrc\n"
             "   source ~/.bashrc\n\n"
-            "Get your API key from: https://makersuite.google.com/app/apikey"
+            "Get your API key from: https://makersuite.google.com/app/apikey\n\n"
+            "Note: For unlimited usage, get your own API key. The default key has rate limits."
         )
         raise ValueError(error_msg)
+    
+    if using_default_key:
+        logger.warning("Using default shared API key. For unlimited usage, set your own GEMINI_API_KEY")
     
     try:
         genai.configure(api_key=api_key)

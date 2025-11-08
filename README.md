@@ -1,6 +1,10 @@
-# Gitpilot - Auto Commit Assistant
+# dev.mk - Auto Commit Assistant
+
+**By Kelvin Mukaria**
 
 A powerful, interactive Python CLI tool that automatically stages all changes in a Git repository, analyzes the diffs using Google's Gemini API, generates clean and professional commit messages, commits the changes, and pushes them to the remote repository. Features a hacker/dev-inspired Rich terminal UI with spinners, progress bars, and interactive commit message preview.
+
+**No API key required!** Works out of the box with built-in API key. Users can optionally set their own key for unlimited usage.
 
 ## ✨ Features
 
@@ -30,18 +34,26 @@ The tool features a beautiful terminal interface with:
 
 ### Quick Install (Recommended)
 
+**Note:** If you get authentication errors, the repository might be private. See [Troubleshooting](#-troubleshooting) below.
+
 **Option 1: Using pipx (Recommended for Linux - avoids permission issues)**
 ```bash
 # Install pipx first
 sudo apt install pipx  # Linux
 brew install pipx      # macOS
 
-# Install Gitpilot
+# Install Gitpilot (repository must be public)
 pipx install git+https://github.com/Kevrollin/gitpilot.io.git
 
 # Add to PATH
 export PATH="$HOME/.local/bin:$PATH"
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+**If repository is private, use SSH:**
+```bash
+# Set up SSH keys first, then:
+pipx install git+ssh://git@github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Option 2: Using pip with --user flag**

@@ -67,7 +67,7 @@ def get_color(color_type: str) -> str:
 
 def show_banner() -> None:
     """Display minimal terminal banner."""
-    console.print(f"[{get_color('accent')}]Gitpilot[/{get_color('accent')}]\n")
+    console.print(f"[{get_color('accent')}]dev.mk[/{get_color('accent')}] by Kelvin Mukaria\n")
 
 
 def show_step(step_name: str, status: str = "running", details: str = "") -> None:

@@ -18,9 +18,9 @@ except ImportError:
 setup(
     name="auto-commit-assistant",
     version=version,
-    author="Gitpilot",
-    author_email="your-email@example.com",  # Update with your email
-    description="Automatically stage, analyze, commit, and push Git changes using AI",
+    author="Kelvin Mukaria",
+    author_email="dev@dev.mk",
+    description="dev.mk - AI-Powered Auto Commit Assistant. Automatically stage, analyze, commit, and push Git changes using AI.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Kevrollin/gitpilot.io",

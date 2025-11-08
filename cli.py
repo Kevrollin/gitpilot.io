@@ -11,7 +11,7 @@ from auto_commit import __version__
 def main():
     """Parse CLI arguments and run auto-commit workflow."""
     parser = argparse.ArgumentParser(
-        description="Gitpilot - AI-Powered Auto Commit Assistant",
+        description="dev.mk - AI-Powered Auto Commit Assistant by Kelvin Mukaria",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -84,14 +84,14 @@ For more information, visit: https://github.com/your-repo/gitpilot
         "--version",
         "-v",
         action="version",
-        version=f"Gitpilot {__version__}",
+        version=f"dev.mk {__version__}",
     )
     
     parser.add_argument(
         "--update",
         "-u",
         action="store_true",
-        help="Update Gitpilot to the latest version from repository",
+        help="Update dev.mk to the latest version from repository",
     )
     
     parser.add_argument(

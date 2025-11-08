@@ -1,4 +1,4 @@
-"""Auto-update functionality for Gitpilot."""
+"""Auto-update functionality for dev.mk."""
 
 import subprocess
 import sys
@@ -11,7 +11,7 @@ logger = get_logger()
 # Default git repository URL - should be set to your actual repo
 DEFAULT_REPO_URL = os.getenv(
     "GITPILOT_REPO_URL",
-    "https://github.com/Kevrollin/gitpilot.io"
+    "https://github.com/Kevrollin/gitpilot.io.git"
 )
 
 
