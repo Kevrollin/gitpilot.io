@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dev.mk - Auto Commit Assistant by Kelvin Mukaria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        
+        .author {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .download-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .download-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .download-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 10px 10px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .download-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .download-link.secondary {
+            background: #764ba2;
+        }
+        
+        .install-section {
+            background: #fff;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .install-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .code-block code {
+            font-size: 0.9em;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .feature h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .version {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>dev.mk <span class="version" id="version">v1.1.1</span></h1>
+            <p class="subtitle">AI-Powered Auto Commit Assistant</p>
+            <p class="author">By Kelvin Mukaria</p>
+        </div>
+        
+        <div class="download-section">
+            <h2>📦 Download</h2>
+            <p style="margin-bottom: 20px; color: #666;">Choose your preferred installation method:</p>
+            
+            <a href="dist/auto_commit_assistant-1.1.1-py3-none-any.whl" class="download-link" download>
+                📥 Download Wheel (.whl)
+            </a>
+            <a href="dist/auto_commit_assistant-1.1.1.tar.gz" class="download-link secondary" download>
+                📥 Download Source (.tar.gz)
+            </a>
+            <div style="margin-top: 15px;">
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Or install directly from PyPI:</p>
+                <div class="code-block" style="margin: 0;">
+                    <code>pip install auto-commit-assistant</code>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <a href="https://github.com/Kevrollin/gitpilot.io" class="download-link" style="background: #24292e;" target="_blank">
+                    🔗 View on GitHub
+                </a>
+            </div>
+        </div>
+        
+        <div class="install-section">
+            <h3>🚀 Quick Install</h3>
+            <p style="margin-bottom: 15px; color: #666;">After downloading, install with:</p>
+            <div class="code-block">
+                <code>pip install auto_commit_assistant-1.1.1-py3-none-any.whl</code>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">Or from source:</p>
+            <div class="code-block">
+                <code>pip install auto-commit-assistant-1.1.1.tar.gz</code>
+            </div>
+        </div>
+        
+        <div class="install-section">
+            <h3>⚡ Install from PyPI (Recommended)</h3>
+            <p style="margin-bottom: 15px; color: #666;">Install directly from PyPI (easiest):</p>
+            <div class="code-block">
+                <code>pip install auto-commit-assistant</code>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">Or with pipx:</p>
+            <div class="code-block">
+                <code>pipx install auto-commit-assistant</code>
+            </div>
+        </div>
+        
+        <div class="install-section">
+            <h3>🔗 Install from GitHub</h3>
+            <p style="margin-bottom: 15px; color: #666;">Install directly from GitHub:</p>
+            <div class="code-block">
+                <code>pipx install git+https://github.com/Kevrollin/gitpilot.io.git</code>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">Or with pip:</p>
+            <div class="code-block">
+                <code>pip install --user git+https://github.com/Kevrollin/gitpilot.io.git</code>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h4>AI-Powered</h4>
+                <p>Uses Google Gemini to generate intelligent commit messages</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h4>Fast & Easy</h4>
+                <p>Automatically stages, analyzes, and commits your changes</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h4>Beautiful UI</h4>
+                <p>Rich terminal interface with spinners and progress bars</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔧</div>
+                <h4>Flexible</h4>
+                <p>Supports multiple CLI flags and customization options</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Made with ❤️ by Kelvin Mukaria</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/Kevrollin/gitpilot.io" style="color: #667eea; text-decoration: none;">GitHub</a> |
+                <a href="https://dev.mk" style="color: #667eea; text-decoration: none;">Website</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-detect version from package files (optional)
+        // You can update this to fetch version dynamically
+        fetch('dist/auto_commit_assistant-1.1.1-py3-none-any.whl')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('version').textContent = 'v1.1.1';
+                }
+            })
+            .catch(() => {
+                // File not found, keep default version
+            });
+    </script>
+</body>
+</html>
+

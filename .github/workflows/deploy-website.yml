@@ -1,0 +1,59 @@
+name: Deploy Website
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'website/**'
+      - 'auto_commit/**'
+      - 'setup.py'
+      - 'scripts/build_package.sh'
+  workflow_dispatch:
+  release:
+    types: [ published ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build wheel
+      
+      - name: Build package
+        run: |
+          python -m build
+          mkdir -p website/dist
+          cp dist/* website/dist/
+      
+      - name: Update version in HTML
+        run: |
+          VERSION=$(python -c "from auto_commit import __version__; print(__version__)")
+          sed -i "s/id=\"version\">v[0-9.]*/id=\"version\">v$VERSION/g" website/index.html
+          sed -i "s/auto_commit_assistant-[0-9.]*-py3-none-any.whl/auto_commit_assistant-$VERSION-py3-none-any.whl/g" website/index.html
+          sed -i "s/auto-commit-assistant-[0-9.]*.tar.gz/auto-commit-assistant-$VERSION.tar.gz/g" website/index.html
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./website
+          cname: dev.mk  # Optional: set your custom domain
+          
+      - name: Deploy status
+        run: |
+          echo "✅ Website deployed successfully!"
+          echo "Visit: https://${{ github.repository_owner }}.github.io/gitpilot.io"
+
