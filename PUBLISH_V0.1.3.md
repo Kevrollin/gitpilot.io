@@ -43,7 +43,7 @@ git commit -m "feat: Add API key, update branding to dev.mk, improve update logi
 
 ### Step 2: Create Tag and Push
 
-```bash
+```bas
 # Create tag
 git tag -a v0.1.3 -m "Release v0.1.3 - dev.mk with built-in API key"
 
