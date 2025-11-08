@@ -11,10 +11,26 @@ Copy and paste this to share with your team:
 Run this command **anywhere on your machine** (it installs globally):
 
 ```bash
+# Try these in order:
 pip install git+https://github.com/Kevrollin/gitpilot.io.git
+# OR if 'pip' not found:
+pip3 install git+https://github.com/Kevrollin/gitpilot.io.git
+# OR if 'pip3' not found:
+python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
-**Alternative:** Using the install script:
+**If pip is not installed:**
+```bash
+# Linux
+sudo apt install python3-pip
+
+# macOS
+brew install python3
+
+# Then try the install command again
+```
+
+**Alternative:** Using the install script (handles pip automatically):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
@@ -90,16 +106,26 @@ autocommit --dry-run
 
 ## ❓ Troubleshooting
 
-**Command not found?**
+**pip/pip3 not found?**
+```bash
+# Install pip first
+sudo apt install python3-pip  # Linux
+brew install python3  # macOS
+
+# Or use python3 -m pip (works even without pip command)
+python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
+```
+
+**Command not found: autocommit?**
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 # Or install with --user flag
-pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Permission errors?**
 ```bash
-pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 ---

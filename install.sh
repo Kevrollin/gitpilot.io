@@ -38,18 +38,39 @@ fi
 echo -e "${GREEN}✓${NC} Python $PYTHON_VERSION found"
 echo ""
 
-# Check if pip is installed
-if ! command -v pip3 &> /dev/null && ! python3 -m pip --version &> /dev/null; then
-    echo -e "${YELLOW}Error: pip is required but not installed.${NC}"
-    echo "Please install pip and try again."
-    exit 1
+# Check if pip is available (either as command or as python module)
+PIP_CMD=""
+if command -v pip3 &> /dev/null; then
+    PIP_CMD="pip3"
+elif python3 -m pip --version &> /dev/null; then
+    PIP_CMD="python3 -m pip"
+else
+    echo -e "${YELLOW}pip is not installed. Installing pip...${NC}"
+    echo ""
+    
+    # Try to install pip using ensurepip (comes with Python 3.4+)
+    if python3 -m ensurepip --upgrade &> /dev/null; then
+        echo -e "${GREEN}✓${NC} pip installed using ensurepip"
+        PIP_CMD="python3 -m pip"
+    else
+        echo -e "${YELLOW}Could not install pip automatically.${NC}"
+        echo ""
+        echo "Please install pip manually:"
+        echo "  sudo apt install python3-pip"
+        echo ""
+        echo "Or on macOS:"
+        echo "  brew install python3"
+        echo ""
+        echo "Then run this script again."
+        exit 1
+    fi
 fi
 
 echo -e "${GREEN}Installing Gitpilot...${NC}"
 echo ""
 
 # Install from git repository
-python3 -m pip install --upgrade --force-reinstall "git+${REPO_URL}"
+${PIP_CMD} install --upgrade --force-reinstall "git+${REPO_URL}"
 
 if [ $? -eq 0 ]; then
     echo ""

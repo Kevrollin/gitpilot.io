@@ -33,10 +33,26 @@ The tool features a beautiful terminal interface with:
 **Install directly from the Git repository** (recommended for easy updates):
 
 ```bash
+# Try these in order if one doesn't work:
 pip install git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+pip3 install git+https://github.com/Kevrollin/gitpilot.io.git
+# OR
+python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
-Or use the install script:
+**If pip is not installed:**
+```bash
+# Linux
+sudo apt install python3-pip
+
+# macOS  
+brew install python3
+
+# Then try the install command again
+```
+
+**Or use the install script** (automatically handles pip installation):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash

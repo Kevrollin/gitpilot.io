@@ -6,10 +6,22 @@
 
 **Option A: One-line install (Recommended)**
 ```bash
+# Try this first
 pip install git+https://github.com/Kevrollin/gitpilot.io.git
+
+# If 'pip' not found, try:
+pip3 install git+https://github.com/Kevrollin/gitpilot.io.git
+
+# If 'pip3' not found, try:
+python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
+
+# If none work, install pip first:
+sudo apt install python3-pip  # Linux
+# or
+brew install python3  # macOS
 ```
 
-**Option B: Using the install script**
+**Option B: Using the install script (Handles pip automatically)**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
@@ -92,18 +104,28 @@ This automatically pulls the latest version from the repository.
 
 ## ❓ Troubleshooting
 
-**Command not found?**
+**pip/pip3 not found?**
+```bash
+# Install pip first
+sudo apt install python3-pip  # Linux
+brew install python3  # macOS
+
+# Or use python3 -m pip
+python3 -m pip install git+https://github.com/Kevrollin/gitpilot.io.git
+```
+
+**Command not found: autocommit?**
 ```bash
 # Add pip's bin directory to PATH
 export PATH="$HOME/.local/bin:$PATH"
 
 # Or install with --user flag
-pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Permission errors?**
 ```bash
-pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
+python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Need help?**
