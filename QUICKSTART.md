@@ -105,15 +105,32 @@ autocommit --skip-ai
 autocommit --dry-run
 ```
 
-## 🔄 Keeping Gitpilot Updated
+## 🔄 Keeping dev.mk Updated
 
-Whenever the maintainer pushes updates, developers can update with:
+**Important:** Users need to update/reinstall to get new versions. Just running `autocommit` uses the currently installed version.
 
+**Update methods:**
+
+**If installed with pipx:**
 ```bash
+pipx upgrade auto-commit-assistant
+
+# Or use autocommit --update (may work)
 autocommit --update
 ```
 
-This automatically pulls the latest version from the repository.
+**If installed with pip:**
+```bash
+autocommit --update
+
+# Or manually
+pip install --user --upgrade git+https://github.com/Kevrollin/gitpilot.io.git
+```
+
+**Check for updates:**
+```bash
+autocommit --check-updates
+```
 
 ## ❓ Troubleshooting
 

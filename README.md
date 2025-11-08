@@ -114,7 +114,7 @@ source ~/.bashrc
 
 The tool will automatically load from a `.env` file if it exists in your project directory, or from environment variables.
 
-## 🔄 Updating Gitpilot
+## 🔄 Updating dev.mk
 
 ### Automatic Update
 
@@ -123,6 +123,11 @@ Update to the latest version:
 ```bash
 autocommit --update
 ```
+
+**Note:** 
+- For **pipx installations**: Uses `pipx upgrade auto-commit-assistant`
+- For **pip installations**: Uses `pip install --upgrade`
+- If auto-update fails, see manual update methods below
 
 ### Check for Updates
 
@@ -134,10 +139,20 @@ autocommit --check-updates
 
 ### Manual Update
 
-If you installed from git, update manually:
-
+**If installed with pipx:**
 ```bash
-pip install --upgrade --force-reinstall git+https://github.com/Kevrollin/gitpilot.io.git
+pipx upgrade auto-commit-assistant
+
+# Or reinstall from git
+pipx reinstall git+https://github.com/Kevrollin/gitpilot.io.git
+```
+
+**If installed with pip:**
+```bash
+pip install --user --upgrade git+https://github.com/Kevrollin/gitpilot.io.git
+
+# Or with --force-reinstall
+pip install --user --upgrade --force-reinstall git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Note:** After updating, restart your terminal or run `hash -r` to refresh command cache.

@@ -70,6 +70,32 @@ def check_for_updates(repo_url: Optional[str] = None) -> Tuple[bool, str]:
         return False, get_installed_version()
 
 
+def is_installed_with_pipx() -> bool:
+    """Check if the package is installed via pipx."""
+    try:
+        # Check if running in a pipx environment
+        # pipx installs packages in isolated venvs
+        venv_path = getattr(sys, 'real_prefix', None) or (getattr(sys, 'base_prefix', None) if hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix else None)
+        if venv_path:
+            # Check if this looks like a pipx environment
+            venv_str = str(venv_path)
+            if 'pipx' in venv_str or '.local/pipx' in venv_str or '.pipx' in venv_str:
+                return True
+        
+        # Alternative: check if pipx command exists and package is listed
+        result = subprocess.run(
+            ["pipx", "list"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if result.returncode == 0 and "auto-commit-assistant" in result.stdout:
+            return True
+    except (subprocess.TimeoutExpired, FileNotFoundError, Exception):
+        pass
+    return False
+
+
 def update_from_git(repo_url: Optional[str] = None, quiet: bool = False) -> bool:
     """
     Update the package by reinstalling from git repository.
@@ -85,22 +111,64 @@ def update_from_git(repo_url: Optional[str] = None, quiet: bool = False) -> bool
         repo_url = get_repo_url()
     
     try:
+        # Check if installed with pipx
+        if is_installed_with_pipx():
+            if not quiet:
+                logger.info("Detected pipx installation. Using pipx to update...")
+            
+            # Use pipx to upgrade
+            result = subprocess.run(
+                ["pipx", "upgrade", "auto-commit-assistant"],
+                capture_output=True,
+                text=True,
+                timeout=300,
+            )
+            
+            if result.returncode == 0:
+                if not quiet:
+                    logger.info("Update completed successfully with pipx")
+                return True
+            else:
+                # If pipx upgrade fails, try reinstalling
+                if not quiet:
+                    logger.info("pipx upgrade failed, trying reinstall...")
+                
+                result = subprocess.run(
+                    ["pipx", "reinstall", "--force", f"git+{repo_url}"],
+                    capture_output=True,
+                    text=True,
+                    timeout=300,
+                )
+                
+                if result.returncode == 0:
+                    if not quiet:
+                        logger.info("Reinstall completed successfully")
+                    return True
+                else:
+                    logger.error(f"pipx update failed: {result.stderr}")
+                    if not quiet:
+                        logger.error("Try manually: pipx upgrade auto-commit-assistant")
+                    return False
+        
+        # Regular pip installation
         if not quiet:
             logger.info(f"Updating from {repo_url}...")
         
-        # Install/upgrade from git
+        # Try with --user flag first (avoids permission issues)
         result = subprocess.run(
             [
                 sys.executable,
                 "-m",
                 "pip",
                 "install",
+                "--user",
                 "--upgrade",
                 "--force-reinstall",
                 f"git+{repo_url}",
             ],
             capture_output=True,
             text=True,
+            timeout=300,
         )
         
         if result.returncode == 0:
@@ -108,9 +176,33 @@ def update_from_git(repo_url: Optional[str] = None, quiet: bool = False) -> bool
                 logger.info("Update completed successfully")
             return True
         else:
-            logger.error(f"Update failed: {result.stderr}")
-            return False
+            # Try without --user flag
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--upgrade",
+                    "--force-reinstall",
+                    f"git+{repo_url}",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=300,
+            )
             
+            if result.returncode == 0:
+                if not quiet:
+                    logger.info("Update completed successfully")
+                return True
+            else:
+                logger.error(f"Update failed: {result.stderr}")
+                return False
+            
+    except subprocess.TimeoutExpired:
+        logger.error("Update timed out")
+        return False
     except Exception as e:
         logger.error(f"Error during update: {str(e)}")
         return False
