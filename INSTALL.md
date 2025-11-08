@@ -6,7 +6,7 @@
 
 ```bash
 # Download and run the install script
-curl -fsSL https://raw.githubusercontent.com/your-username/auto-commit-assistant/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
 
 Or manually:
@@ -19,7 +19,7 @@ chmod +x install.sh
 ### Option 2: Direct pip install from Git
 
 ```bash
-pip install git+https://github.com/your-username/auto-commit-assistant.git
+pip install git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 ### Option 3: Install from local source
@@ -57,7 +57,7 @@ autocommit --check-updates
 If you installed from git, you can update manually:
 
 ```bash
-pip install --upgrade --force-reinstall git+https://github.com/your-username/auto-commit-assistant.git
+pip install --upgrade --force-reinstall git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 ## Configuration
@@ -67,13 +67,13 @@ pip install --upgrade --force-reinstall git+https://github.com/your-username/aut
 If you're using a custom repository or private repo, set the environment variable:
 
 ```bash
-export GITPILOT_REPO_URL="https://github.com/your-org/auto-commit-assistant.git"
+export GITPILOT_REPO_URL="https://github.com/Kevrollin/gitpilot.io.git"
 ```
 
 Or add it to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.):
 
 ```bash
-echo 'export GITPILOT_REPO_URL="https://github.com/your-org/auto-commit-assistant.git"' >> ~/.bashrc
+echo 'export GITPILOT_REPO_URL="https://github.com/Kevrollin/gitpilot.io.git"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -130,7 +130,7 @@ If updates fail, try:
 ```bash
 # Uninstall and reinstall
 pip uninstall auto-commit-assistant
-pip install git+https://github.com/your-username/auto-commit-assistant.git
+pip install git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 ### Permission errors
@@ -138,7 +138,7 @@ pip install git+https://github.com/your-username/auto-commit-assistant.git
 If you get permission errors, use `--user` flag:
 
 ```bash
-pip install --user git+https://github.com/your-username/auto-commit-assistant.git
+pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 ## For Developers

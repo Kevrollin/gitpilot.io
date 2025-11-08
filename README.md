@@ -33,13 +33,13 @@ The tool features a beautiful terminal interface with:
 **Install directly from the Git repository** (recommended for easy updates):
 
 ```bash
-pip install git+https://github.com/your-username/auto-commit-assistant.git
+pip install git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 Or use the install script:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/your-username/auto-commit-assistant/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
 
 ### Alternative: Local Development Installation
@@ -48,8 +48,8 @@ If you want to develop or customize Gitpilot:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/auto-commit-assistant.git
-   cd auto_commit_assistant
+   git clone https://github.com/Kevrollin/gitpilot.io.git
+   cd gitpilot.io
    ```
 
 2. **Install in development mode:**
@@ -102,7 +102,7 @@ autocommit --check-updates
 If you installed from git, update manually:
 
 ```bash
-pip install --upgrade --force-reinstall git+https://github.com/your-username/auto-commit-assistant.git
+pip install --upgrade --force-reinstall git+https://github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Note:** After updating, restart your terminal or run `hash -r` to refresh command cache.
@@ -112,7 +112,7 @@ pip install --upgrade --force-reinstall git+https://github.com/your-username/aut
 If you're using a custom or private repository, set the repository URL:
 
 ```bash
-export GITPILOT_REPO_URL="https://github.com/your-org/auto-commit-assistant.git"
+export GITPILOT_REPO_URL="https://github.com/Kevrollin/gitpilot.io.git"
 ```
 
 Add this to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.) to make it permanent.

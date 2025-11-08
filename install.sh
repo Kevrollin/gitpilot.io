@@ -9,8 +9,8 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Default repository URL - update this with your actual repository URL
-REPO_URL="${GITPILOT_REPO_URL:-https://github.com/your-username/auto-commit-assistant.git}"
+# Default repository URL
+REPO_URL="${GITPILOT_REPO_URL:-https://github.com/Kevrollin/gitpilot.io.git}"
 
 echo -e "${BLUE}╔═══════════════════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║${NC}  ${GREEN}Gitpilot - Auto Commit Assistant${NC}                    ${BLUE}║${NC}"
