@@ -1,190 +1,119 @@
-# Gitpilot Quick Start Guide
+# Quick Start Guide - dev.mk Auto Commit Assistant
 
-## 🚀 For Developers - Get Started in 2 Minutes
+Get started in 5 minutes! 🚀
 
-### Step 1: Install Gitpilot (Run anywhere on your machine)
+## ⚡ Quick Installation
 
-**Option A: Using pipx (Recommended for Linux - avoids permission issues)**
+### Step 1: Install (1 command)
+
 ```bash
-# Install pipx first (if not installed)
-sudo apt install pipx  # Linux
-brew install pipx      # macOS
+curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install-from-drive.sh | bash
+```
 
-# Install Gitpilot with pipx
-pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+Wait for it to complete (takes about 1-2 minutes).
 
-# Make sure pipx bin is in PATH (if not already)
+### Step 2: Verify Installation
+
+```bash
+autocommit --version
+```
+
+Should show: `dev.mk 1.1.1`
+
+**If you see "command not found":**
+```bash
 export PATH="$HOME/.local/bin:$PATH"
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-```
-
-**Option B: Using pip with --user flag (Alternative)**
-```bash
-# Try these in order:
-pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
-# OR
-pip3 install --user git+https://github.com/Kevrollin/gitpilot.io.git
-# OR
-python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
-
-# Add to PATH
-export PATH="$HOME/.local/bin:$PATH"
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-```
-
-**Option C: Using the install script (Handles everything automatically)**
-```bash
-curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
-```
-
-**Where to run:** You can run this command from **any directory** - it installs Gitpilot globally on your system.
-
-**Note:** On newer Linux systems (Ubuntu 22.04+, Debian 12+), you may see an "externally-managed-environment" error. Use `pipx` (Option A) or `--user` flag (Option B) to avoid this.
-
-### Step 2: Set Your API Key
-
-Get your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
-
-**Option A: Environment variable (system-wide)**
-```bash
-export GEMINI_API_KEY="your-api-key-here"
-```
-
-To make it permanent, add to your `~/.bashrc` or `~/.zshrc`:
-```bash
-echo 'export GEMINI_API_KEY="your-api-key-here"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-**Option B: Project-specific (recommended)**
+### Step 3: Use It!
+
 ```bash
-# Navigate to your project directory
+# Go to your project
 cd /path/to/your/project
 
-# Create a .env file
-echo 'GEMINI_API_KEY=your-api-key-here' > .env
-```
+# Make some changes (edit files, create files, etc.)
 
-### Step 3: Use Gitpilot in Your Projects
-
-**Navigate to any Git repository:**
-```bash
-cd /path/to/your/git/project
-```
-
-**Run Gitpilot:**
-```bash
+# Run dev.mk
 autocommit
 ```
 
-That's it! Gitpilot will:
-1. Stage all your changes
-2. Generate an AI commit message
-3. Let you preview/edit the message
-4. Commit and push your changes
+That's it! 🎉
 
-## 📝 Common Commands
+---
+
+## 📝 What Happens Next?
+
+1. **dev.mk stages all your changes**
+2. **Analyzes what you changed**
+3. **Generates an AI commit message**
+4. **Shows you a preview**
+5. **You accept, edit, or write your own message**
+6. **Commits and pushes automatically**
+
+---
+
+## 🎯 Common Commands
 
 ```bash
-# Interactive mode (recommended)
-autocommit
-
-# Auto-accept AI messages (no preview)
-autocommit --yes
-
-# Check for updates
-autocommit --check-updates
-
-# Update to latest version
-autocommit --update
-
-# Skip AI, enter manual message
-autocommit --skip-ai
-
-# Dry run (see what would happen)
-autocommit --dry-run
+autocommit                  # Interactive mode
+autocommit --yes            # Auto-accept AI message
+autocommit --dry-run        # Test without committing
+autocommit --skip-ai        # Manual commit message
+autocommit --help           # Show all options
 ```
 
-## 🔄 Keeping dev.mk Updated
+---
 
-**Important:** Users need to update/reinstall to get new versions. Just running `autocommit` uses the currently installed version.
+## 🔧 Optional: Set API Key
 
-**Update methods:**
+For unlimited usage, set your Gemini API key:
 
-**If installed with pipx:**
 ```bash
-pipx upgrade auto-commit-assistant
-
-# Or use autocommit --update (may work)
-autocommit --update
+export GEMINI_API_KEY='your-api-key-here'
+echo 'export GEMINI_API_KEY="your-api-key-here"' >> ~/.bashrc
 ```
 
-**If installed with pip:**
-```bash
-autocommit --update
+Get your key from: https://makersuite.google.com/app/apikey
 
-# Or manually
-pip install --user --upgrade git+https://github.com/Kevrollin/gitpilot.io.git
-```
+**Note:** dev.mk works without an API key (uses built-in key), but setting your own gives you unlimited usage.
 
-**Check for updates:**
-```bash
-autocommit --check-updates
-```
+---
 
-## ❓ Troubleshooting
+## 🆘 Having Issues?
 
-**Externally-managed-environment error?**
-```bash
-# Use pipx (recommended)
-sudo apt install pipx
-pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+### Installation Problems?
 
-# OR use --user flag
-python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
-export PATH="$HOME/.local/bin:$PATH"
-```
+1. **Check Python:** `python3 --version` (need 3.8+)
+2. **Check pip:** `pip --version` or `pip3 --version`
+3. **Try manual install:** See [INSTALL.md](INSTALL.md)
 
-**pip/pip3 not found?**
-```bash
-# Install pip first
-sudo apt install python3-pip  # Linux
-brew install python3  # macOS
+### Usage Problems?
 
-# Or use python3 -m pip with --user
-python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
-```
+1. **"command not found":** Add to PATH (see Step 2 above)
+2. **"Not a git repository":** Run `git init` first
+3. **"No changes":** Make some changes to files first
 
-**Command not found: autocommit?**
-```bash
-# Add pip's bin directory to PATH
-export PATH="$HOME/.local/bin:$PATH"
+### Need More Help?
 
-# Or install with --user flag
-python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
-```
+- **Full Guide:** See [USER_GUIDE.md](USER_GUIDE.md)
+- **Installation:** See [INSTALL.md](INSTALL.md)
+- **Troubleshooting:** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
-**Permission errors or externally-managed-environment?**
-```bash
-# Use pipx (best solution)
-sudo apt install pipx
-pipx install git+https://github.com/Kevrollin/gitpilot.io.git
+---
 
-# OR use --user flag
-python3 -m pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
-export PATH="$HOME/.local/bin:$PATH"
-```
+## ✅ Checklist
 
-**Need help?**
-- Check the [README.md](README.md) for detailed documentation
-- Check [INSTALL.md](INSTALL.md) for installation options
+- [ ] Installed dev.mk
+- [ ] Verified installation (`autocommit --version`)
+- [ ] Added to PATH (if needed)
+- [ ] Set API key (optional)
+- [ ] Tested in a project
+- [ ] Ready to use!
 
-## 🎯 Summary
+---
 
-1. **Install once** (anywhere): `pip install git+https://github.com/Kevrollin/gitpilot.io.git`
-2. **Set API key** (once): `export GEMINI_API_KEY="your-key"`
-3. **Use in projects**: `cd your-project && autocommit`
-4. **Update when needed**: `autocommit --update`
+**That's it! You're ready to use dev.mk! 🎉**
 
-Happy committing! 🚀
-
+For detailed instructions, see [USER_GUIDE.md](USER_GUIDE.md)

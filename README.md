@@ -6,6 +6,13 @@ A powerful, interactive Python CLI tool that automatically stages all changes in
 
 **No API key required!** Works out of the box with built-in API key. Users can optionally set their own key for unlimited usage.
 
+## 🚀 Quick Links
+
+- **[Quick Start Guide](QUICKSTART.md)** - Get started in 5 minutes
+- **[User Guide](USER_GUIDE.md)** - Complete step-by-step guide for beginners
+- **[Interactive Walkthrough](WALKTHROUGH.md)** - See exactly what you'll see at each step
+- **[Installation Guide](INSTALL.md)** - Detailed installation instructions
+
 ## ✨ Features
 
 - 🎨 **Rich Interactive Terminal UI**: Beautiful hacker/dev-inspired interface with spinners, progress bars, panels, and banners

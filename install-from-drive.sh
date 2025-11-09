@@ -113,14 +113,30 @@ fi
 echo -e "${GREEN}✓${NC} Download completed"
 echo ""
 
-# Check file type (wheel files are ZIP archives)
+# Verify file is actually a wheel file (ZIP archive)
 if command -v file &> /dev/null; then
-    FILE_TYPE=$(file "${TMP_DIR}/${PACKAGE_FILE}" | grep -o "Zip\|gzip\|ASCII")
-    if [ -z "$FILE_TYPE" ]; then
-        echo -e "${YELLOW}Warning: Downloaded file may not be a valid package.${NC}"
+    FILE_TYPE=$(file "${TMP_DIR}/${PACKAGE_FILE}")
+    if echo "$FILE_TYPE" | grep -q "Zip\|zip\|ZIP"; then
+        echo -e "${GREEN}✓${NC} Valid wheel file detected"
+    elif echo "$FILE_TYPE" | grep -q "HTML\|html"; then
+        echo -e "${RED}Error: Downloaded file is HTML (likely an error page)${NC}"
+        echo "This usually means:"
+        echo "  1. The file ID is incorrect"
+        echo "  2. The file is not publicly shared"
+        echo "  3. Google Drive is showing a warning page"
+        echo ""
+        echo "Please check the Google Drive link and file sharing settings."
+        exit 1
+    else
+        echo -e "${YELLOW}Warning: Downloaded file type: ${FILE_TYPE}${NC}"
         echo "Continuing with installation..."
     fi
 fi
+
+# Get actual file size for verification
+FILE_SIZE=$(ls -lh "${TMP_DIR}/${PACKAGE_FILE}" | awk '{print $5}')
+echo -e "${BLUE}File size:${NC} ${FILE_SIZE}"
+echo ""
 
 # Install the package
 echo -e "${BLUE}Installing ${PACKAGE_NAME}...${NC}"
@@ -129,6 +145,9 @@ echo ""
 # Try pipx first (recommended for CLI tools)
 if command -v pipx &> /dev/null; then
     echo -e "${GREEN}Using pipx (recommended for CLI tools)...${NC}"
+    echo ""
+    
+    # pipx requires the full path and proper wheel filename
     pipx install "${TMP_DIR}/${PACKAGE_FILE}" --force
     INSTALL_SUCCESS=$?
     
@@ -138,12 +157,28 @@ if command -v pipx &> /dev/null; then
         echo -e "${BLUE}Note:${NC} Make sure pipx's bin directory is in your PATH:"
         echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
         echo "  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.bashrc"
+    else
+        echo -e "${YELLOW}pipx installation failed, trying pip with --user flag...${NC}"
+        INSTALL_SUCCESS=1
     fi
-else
-    # Use pip with --user flag
+fi
+
+# If pipx failed or not available, try pip with --user flag
+if [ $INSTALL_SUCCESS -ne 0 ] || [ -z "$INSTALL_SUCCESS" ]; then
     echo -e "${GREEN}Using pip (user install)...${NC}"
+    echo ""
+    
+    # Try with --user flag first (avoids externally-managed-environment error)
     ${PIP_CMD} install --user --upgrade --force-reinstall "${TMP_DIR}/${PACKAGE_FILE}"
     INSTALL_SUCCESS=$?
+    
+    if [ $INSTALL_SUCCESS -ne 0 ]; then
+        echo -e "${YELLOW}User install failed. This might be due to externally-managed-environment.${NC}"
+        echo ""
+        echo -e "${BLUE}Trying with --break-system-packages flag (use with caution)...${NC}"
+        ${PIP_CMD} install --break-system-packages --upgrade --force-reinstall "${TMP_DIR}/${PACKAGE_FILE}"
+        INSTALL_SUCCESS=$?
+    fi
     
     if [ $INSTALL_SUCCESS -eq 0 ]; then
         echo -e "${GREEN}✓${NC} Installation completed successfully!"
