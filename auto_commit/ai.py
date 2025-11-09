@@ -161,10 +161,10 @@ Commit message:"""
                 # Use timeout handler to prevent hanging
                 try:
                     with timeout_handler(API_TIMEOUT):
-                response = model.generate_content(prompt)
-                used_model = model_name
-                logger.info(f"Using model: {model_name}")
-                break  # Success!
+                        response = model.generate_content(prompt)
+                        used_model = model_name
+                        logger.info(f"Using model: {model_name}")
+                        break  # Success!
                 except TimeoutError as te:
                     logger.warning(f"Model {model_name} timed out after {API_TIMEOUT}s: {str(te)}")
                     last_error = te
@@ -192,24 +192,24 @@ Commit message:"""
             try:
                 logger.debug("Discovering available models...")
                 with timeout_handler(API_TIMEOUT):
-                models = genai.list_models()
-                for model in models:
-                    if 'generateContent' in model.supported_generation_methods:
-                        model_name = model.name.replace('models/', '')
-                        try:
-                            logger.ai_request(model_name, len(prompt))
-                            model_obj = genai.GenerativeModel(
-                                model_name,
-                                generation_config=generation_config,
-                                safety_settings=safety_settings
-                            )
-                            with timeout_handler(API_TIMEOUT):
-                            response = model_obj.generate_content(prompt)
-                            used_model = model_name
-                            logger.info(f"Using discovered model: {model_name}")
-                            break
-                        except (TimeoutError, Exception):
-                            continue
+                    models = genai.list_models()
+                    for model in models:
+                        if 'generateContent' in model.supported_generation_methods:
+                            model_name = model.name.replace('models/', '')
+                            try:
+                                logger.ai_request(model_name, len(prompt))
+                                model_obj = genai.GenerativeModel(
+                                    model_name,
+                                    generation_config=generation_config,
+                                    safety_settings=safety_settings
+                                )
+                                with timeout_handler(API_TIMEOUT):
+                                    response = model_obj.generate_content(prompt)
+                                    used_model = model_name
+                                    logger.info(f"Using discovered model: {model_name}")
+                                    break
+                            except (TimeoutError, Exception):
+                                continue
             except TimeoutError:
                 logger.error(f"Failed to list models: Request timed out after {API_TIMEOUT}s")
             except Exception as list_error:
@@ -252,17 +252,17 @@ Commit message:"""
                         f"- Retrying the operation\n"
                     )
                 else:
-            raise Exception(
-                f"Could not find an available Gemini model.\n\n"
-                f"Tried models: {', '.join(model_names)}\n"
-                f"Last error: {error_details[:200]}\n\n"
-                f"This might be due to:\n"
-                f"1. API key doesn't have access to Gemini models\n"
-                f"2. API key is invalid or expired\n"
-                f"3. Network/connectivity issues\n\n"
-                f"Please verify your API key at: https://makersuite.google.com/app/apikey\n"
-                f"And check available models at: https://ai.google.dev/models/gemini"
-            )
+                    raise Exception(
+                        f"Could not find an available Gemini model.\n\n"
+                        f"Tried models: {', '.join(model_names)}\n"
+                        f"Last error: {error_details[:200]}\n\n"
+                        f"This might be due to:\n"
+                        f"1. API key doesn't have access to Gemini models\n"
+                        f"2. API key is invalid or expired\n"
+                        f"3. Network/connectivity issues\n\n"
+                        f"Please verify your API key at: https://makersuite.google.com/app/apikey\n"
+                        f"And check available models at: https://ai.google.dev/models/gemini"
+                    )
         
         # Check if response was blocked by safety filters
         if not response.candidates or len(response.candidates) == 0:
@@ -300,9 +300,10 @@ Commit message:"""
         
         # Extract the commit message from the response
         try:
-        commit_message = response.text.strip()
+            commit_message = response.text.strip()
         except ValueError as e:
             # If response.text fails, try to get it from parts
+            candidate = response.candidates[0]
             if candidate.content and candidate.content.parts:
                 commit_message = candidate.content.parts[0].text.strip()
             else:
