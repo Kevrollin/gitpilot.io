@@ -32,9 +32,33 @@ The tool features a beautiful terminal interface with:
 
 ## 🚀 Installation
 
-### Quick Install (Recommended)
+### Quick Install from Google Drive (Recommended)
 
-**Note:** If you get authentication errors, the repository might be private. See [Troubleshooting](#-troubleshooting) below.
+**Easiest Method: One-Liner Installation**
+```bash
+curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install-from-drive.sh | bash
+```
+
+**Download & Install (Required - pip/pipx cannot install directly from Google Drive URLs)**
+```bash
+# Download the package first
+curl -L "https://drive.google.com/uc?export=download&id=1A1fNt_FyfvHcjtN18v5NzBYMEVy7L6Lg" -o package.whl
+
+# Then install
+pip install --user package.whl
+# Or with pipx (recommended for CLI tools)
+pipx install package.whl
+
+# Add to PATH
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+⚠️ **Note:** pip/pipx cannot install directly from Google Drive URLs. You must download the file first, then install it. The installation script handles this automatically.
+
+📖 **For detailed installation instructions, see [INSTALL.md](INSTALL.md)**
+
+### Alternative: Install from GitHub
 
 **Option 1: Using pipx (Recommended for Linux - avoids permission issues)**
 ```bash
@@ -57,7 +81,7 @@ pipx install git+ssh://git@github.com/Kevrollin/gitpilot.io.git
 ```
 
 **Option 2: Using pip with --user flag**
-   ```bash
+```bash
 # Try these in order:
 pip install --user git+https://github.com/Kevrollin/gitpilot.io.git
 # OR
@@ -71,11 +95,11 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
 **Option 3: Using the install script** (automatically handles everything):
-   ```bash
+```bash
 curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install.sh | bash
 ```
 
-**Note:** On newer Linux systems (Ubuntu 22.04+, Debian 12+), you may encounter an "externally-managed-environment" error. Use `pipx` (Option 1) or `--user` flag (Option 2) to avoid this issue.
+**Note:** On newer Linux systems (Ubuntu 22.04+, Debian 12+), you may encounter an "externally-managed-environment" error. Use `pipx` or `--user` flag to avoid this issue.
 
 ### Alternative: Local Development Installation
 

@@ -173,17 +173,17 @@
             <h2>📦 Download</h2>
             <p style="margin-bottom: 20px; color: #666;">Choose your preferred installation method:</p>
             
-            <a href="dist/auto_commit_assistant-1.1.1-py3-none-any.whl" class="download-link" download>
+            <!-- Google Drive Download Links -->
+            <a href="https://drive.google.com/uc?export=download&id=1A1fNt_FyfvHcjtN18v5NzBYMEVy7L6Lg" class="download-link" download>
                 📥 Download Wheel (.whl)
             </a>
-            <a href="dist/auto_commit_assistant-1.1.1.tar.gz" class="download-link secondary" download>
+            <a href="https://drive.google.com/uc?export=download&id=1BWRdca3IcozBTJ6h4ZRiz-piQKY06QCL" class="download-link secondary" download>
                 📥 Download Source (.tar.gz)
             </a>
-            <div style="margin-top: 15px;">
-                <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Or install directly from PyPI:</p>
-                <div class="code-block" style="margin: 0;">
-                    <code>pip install auto-commit-assistant</code>
-                </div>
+            
+            <div style="margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 8px; border-left: 4px solid #4caf50;">
+                <p style="color: #2e7d32; font-size: 0.9em; margin-bottom: 8px; font-weight: bold;">💡 Quick Tip:</p>
+                <p style="color: #666; font-size: 0.85em; margin: 0;">You can install directly without downloading! See installation section below.</p>
             </div>
             
             <div style="margin-top: 20px;">
@@ -194,32 +194,41 @@
         </div>
         
         <div class="install-section">
-            <h3>🚀 Quick Install</h3>
-            <p style="margin-bottom: 15px; color: #666;">After downloading, install with:</p>
+            <h3>⚡ One-Command Install (Easiest)</h3>
+            <p style="margin-bottom: 15px; color: #666;">Copy and paste this command:</p>
+            <div class="code-block">
+                <code>curl -fsSL https://raw.githubusercontent.com/Kevrollin/gitpilot.io/main/install-from-drive.sh | bash</code>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">This will automatically download and install dev.mk from Google Drive.</p>
+        </div>
+        
+        <div class="install-section">
+            <h3>📦 Download & Install from Google Drive</h3>
+            <p style="margin-bottom: 15px; color: #666;">⚠️ <strong>Note:</strong> pip/pipx cannot install directly from Google Drive URLs. Download first, then install:</p>
+            <div class="code-block">
+                <code>curl -L "https://drive.google.com/uc?export=download&id=1A1fNt_FyfvHcjtN18v5NzBYMEVy7L6Lg" -o package.whl<br>pip install --user package.whl</code>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">Or with pipx (recommended for CLI tools):</p>
+            <div class="code-block" style="font-size: 0.85em;">
+                <code>curl -L "https://drive.google.com/uc?export=download&id=1A1fNt_FyfvHcjtN18v5NzBYMEVy7L6Lg" -o package.whl<br>pipx install package.whl</code>
+            </div>
+        </div>
+        
+        <div class="install-section">
+            <h3>📥 Download & Install</h3>
+            <p style="margin-bottom: 15px; color: #666;">If you downloaded the files above, install with:</p>
             <div class="code-block">
                 <code>pip install auto_commit_assistant-1.1.1-py3-none-any.whl</code>
             </div>
-            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">Or from source:</p>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">Or from source file:</p>
             <div class="code-block">
-                <code>pip install auto-commit-assistant-1.1.1.tar.gz</code>
+                <code>pip install auto_commit_assistant-1.1.1.tar.gz</code>
             </div>
         </div>
         
         <div class="install-section">
-            <h3>⚡ Install from PyPI (Recommended)</h3>
-            <p style="margin-bottom: 15px; color: #666;">Install directly from PyPI (easiest):</p>
-            <div class="code-block">
-                <code>pip install auto-commit-assistant</code>
-            </div>
-            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">Or with pipx:</p>
-            <div class="code-block">
-                <code>pipx install auto-commit-assistant</code>
-            </div>
-        </div>
-        
-        <div class="install-section">
-            <h3>🔗 Install from GitHub</h3>
-            <p style="margin-bottom: 15px; color: #666;">Install directly from GitHub:</p>
+            <h3>🔗 Alternative: Install from GitHub</h3>
+            <p style="margin-bottom: 15px; color: #666;">Install directly from GitHub repository:</p>
             <div class="code-block">
                 <code>pipx install git+https://github.com/Kevrollin/gitpilot.io.git</code>
             </div>
@@ -262,17 +271,8 @@
     </div>
     
     <script>
-        // Auto-detect version from package files (optional)
-        // You can update this to fetch version dynamically
-        fetch('dist/auto_commit_assistant-1.1.1-py3-none-any.whl')
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('version').textContent = 'v1.1.1';
-                }
-            })
-            .catch(() => {
-                // File not found, keep default version
-            });
+        // Version is set in HTML, no need to fetch
+        // Version: v1.1.1
     </script>
 </body>
 </html>
